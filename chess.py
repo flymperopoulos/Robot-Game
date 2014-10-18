@@ -1,4 +1,7 @@
 class Pawn:
+
+	"""Class for the Pawn Object piece"""
+
 	def __init__(self, position, color, name, state, change):
 		self.position = position
 		self.color = color
@@ -46,11 +49,13 @@ class Pawn:
 			validateMoves.append(moves[1])
 
 class Bishop():
-	def __init__(self, position, color, name, state, negativeDirection):
+
+	"""Class for the Bishop Object piece"""
+
+	def __init__(self, position, color, name):
 		self.position = position
 		self.color = color
 		self.name = 'b'
-		self.negativeDirection = negativeDirection
 
 	def possibleMoves(self):
 		x,y = self.position
@@ -68,6 +73,119 @@ class Bishop():
 
 		# Loops through validMoves 
 		for m in validMoves:
+			# Checks the value of all the dictonary keys and if it is 0, then nothing is there, so it can move
+			if self.board.get(m) == 0:
+				validMoves.append(m)
+			# However, it can also move, if something is there, if it is an enemy
+			if self.board.get(m) == 1 and self.board.get(m).color != color:
+				validMoves.append(m)
+
+class Rook:
+
+	"""Class for the Rook Object piece"""
+
+	def __init__(self, position, color, name, state):
+		self.position = position
+		self.color = color
+		self.name = 'r'
+
+	def possibleMoves(self):
+		x,y = self.position
+
+		rookMoves = []
+
+		for i in range(-7,8):
+			if 0<x+i<8:
+				rookMoves.append((x+i,y))
+				rookMoves.append((x,y+i))
+		return rookMoves	
+
+	def validateMoves(self):
+		rookValidMoves = possibleMoves()
+
+		x,y = self.position
+
+		for r in rookValidMoves:
+
+			if self.board.get(r) == 0:
+				rookValidMoves.append(r)
+			if self.board.get(r) == 1 and self.board.get(r).color != color:
+				validMoves.append(r)
+
+class Knight:
+
+	"""Class for the Knight Object piece"""
+
+	def __init__(self, position, color, name):
+		self.position = position
+		self.color = color
+		self.name = 'k'
+
+	def possibleMoves(self):
+		x,y = self.position
+		while x-1>0
+			moves = [(x+1,y+3),(x-1,y+3),(x-1,y-3),(x+1,y-3)]
+		return moves
+
+	def validateMoves(self):
+		knightValidMoves = possibleMoves()
+
+		for k in knightValidMoves:
+
+			if self.board.get(k) == 0:
+				rookValidMoves.append(k)
+			if self.board.get(k) == 1 and self.board.get(k).color != color:
+				validMoves.append(k)
+
+class King:
+
+	"""Class for the King Object piece"""
+
+	def __init__(self, position, color, name):
+		self.position = position
+		self.color = color
+		self.name = 'king'
+
+	def possibleMoves(self):
+		x,y = self.position
+		moves = [(x,y+1),(x+1,y),(x+1,y+1),(x-1,y-1),(x+1,y-1),(x-1,y+1)]
+		return moves
+
+	def validateMoves(self):
+		kingValidMoves = possibleMoves()
+
+		for k in kingValidMoves:
+			if self.board.get(k) == 0:
+				kingValidMoves.append(k)
+			if self.board.get(k) and self.board.get(k).color != color:
+				kingValidMoves.append(k)
+
+class Queen:
+
+	"""Class for the Queen Object piece"""
+
+	def __init__(self, position, color, name):
+		self.position = position
+		self.color = color
+		self.name = 'q'
+
+	def possibleMoves(self):
+		queenMoves = []
+
+		for i in range(-7,8):
+			if 0<x+i<8:
+				queenMoves.append((x+i,y+i))
+				queenMoves.append((x+i,y))
+				queenMoves.append((x,y+i))
+		return queenMoves
+
+	def validateMoves(self):
+		queenValidMoves = possibleMoves()
+
+		x,y = self.position
+
+		# Loops through validMoves 
+		for m in queenValidMoves:
 			# Checks the value of all the dictonary keys and if it is 0, then nothing is there, so it can move
 			if self.board.get(m) == 0:
 				validMoves.append(m)
