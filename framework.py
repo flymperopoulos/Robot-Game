@@ -1,4 +1,5 @@
 import chess
+<<<<<<< HEAD
 import checkers
 import tictactoe
 
@@ -126,6 +127,36 @@ def run(game,curPlayer,playW, playB):
 		print "winner " + player
 	else: 
 		print "Stalemate"
+=======
+
+def done(brd):
+	"""Return True if game is won or if game is unwinnable. Print some statement based on the condition."""
+	return True
+
+def otherPlayer(player):
+	"""switch between players""" 
+	return True
+
+def validateMove(brd, move):
+	"""detects if a move is legal"""
+	return True
+
+def move(brd):
+	"""Makes a legal move based on current game rules"""
+	return True
+
+def getState():
+	"""detects how the board looks"""
+	return True
+
+def createBoard():
+        """ Creates board"""
+	return True
+
+def run():
+        """ Run method for the file"""
+	return True
+>>>>>>> 6044f8cbc19337c754c27716a0ba4cf83cb8883a
 
 def main():
 	game, brd = getState()
