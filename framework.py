@@ -1,5 +1,5 @@
-import chess
-#import checkers
+from chess import *
+from checkers import *
 #import tictactoe
 
 def printBoardttt(brd):
@@ -97,16 +97,16 @@ def getState():
 
 def createBoard(game):
 	"""initializes board"""
-	if game.lowercase() == "chess":
-		game = chess
-		return game, chess.initalboard()
-	elif game.lowercase() == "checkers":
+	if game.lower() == "chess":
+		game = Chess
+		return game, Chess.initalboard()
+	elif game.lower() == "checkers":
 		game = checkers
-		return game, checkers.initalboard()
+		checkers.initalboard()
+		return game, checkers.board
 	else:
 		game = tictactoe
 		return game, tictactoe.initalboard()
-	return True
 
 def run(game,curPlayer,playW, playB):
 	game, brd = createBoard(game)
@@ -132,13 +132,13 @@ def main():
 	inpt = raw_input("Game, Current player(w or b), Human or Computer, Human or Computer.")
 	usrInput = inpt.split()
 	if usrInput[2].upper() == "HUMAN":
-		playW = readPlayerInput()
+		playW = readPlayerInput
 	else: 
-		playW = computerMove()
+		playW = computerMove
 	if usrInput[2].upper() == "HUMAN":
-		playB = readPlayerInput()
+		playB = readPlayerInput
 	else: 
-		playB = computerMove()
+		playB = computerMove
 
 	run(usrInput[0],usrInput[1].upper(), playW, playB)
 
