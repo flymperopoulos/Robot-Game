@@ -30,17 +30,17 @@ def printBoard(brd):
 	print brd[49:56]
 	print brd[57:64]
 
-def done(game, brd):
+def done(game, brd, player):
 	"""Return True if game is won or if game is unwinnable. Print some statement based on the condition."""
-	if hasWin(game, brd):
+	if hasWin(game, brd, player):
 		return True
 	elif game.end():
 		return True
 	else:
 		return False
 
-def hasWin(game,brd):
-	if game.hasWin():
+def hasWin(game,brd,player):
+	if game.hasWin(brd, player):
 		return True
 	else:
 		return False
@@ -114,7 +114,7 @@ def run(game,curPlayer,playW, playB):
 	printBoard(brd)
 	
 	player = curPlayer
-	while not done(brd):
+	while not done(game, brd, player):
 		if player = 'W':
 			move = playW(brd, player)
 		else:
