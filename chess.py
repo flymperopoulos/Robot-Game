@@ -123,7 +123,7 @@ class Knight:
 
 	def possibleMoves(self):
 		x,y = self.position
-		while x-1>0
+		while (x-1)>0:
 			moves = [(x+1,y+3),(x-1,y+3),(x-1,y-3),(x+1,y-3)]
 		return moves
 

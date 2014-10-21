@@ -1,6 +1,6 @@
 import chess
-import checkers
-import tictactoe
+#import checkers
+#import tictactoe
 
 def printBoardttt(brd):
 	"""displays board"""
@@ -60,7 +60,7 @@ def validateMove(game, brd, move):
 def readPlayerInput(brd):
 	while True:
 		usrInput = raw_input("Piece newX newY or Q")
-		if usrInput.uppercase == 'Q':
+		if usrInput.upper() == 'Q':
 			sys.exit(0)
 		lis = usrInput.split()
 		if len(move) == 5:
@@ -115,7 +115,7 @@ def run(game,curPlayer,playW, playB):
 	
 	player = curPlayer
 	while not done(game, brd, player):
-		if player = 'W':
+		if player == 'W':
 			move = playW(brd, player)
 		else:
 			move = playB(brd, player)
@@ -131,16 +131,16 @@ def main():
 	game, brd = getState()
 	inpt = raw_input("Game, Current player(w or b), Human or Computer, Human or Computer.")
 	usrInput = inpt.split()
-	if usrInput[2].uppercase() == "HUMAN":
+	if usrInput[2].upper() == "HUMAN":
 		playW = readPlayerInput()
 	else: 
 		playW = computerMove()
-	if usrInput[2].uppercase() == "HUMAN":
+	if usrInput[2].upper() == "HUMAN":
 		playB = readPlayerInput()
 	else: 
 		playB = computerMove()
 
-	run(usrInput[0],usrInput[1].uppercase(), playW, playB)
+	run(usrInput[0],usrInput[1].upper(), playW, playB)
 
 
 	return True
