@@ -40,4 +40,3 @@ class checkers:
                     return False
                 else:
                     return True
-
