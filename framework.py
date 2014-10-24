@@ -21,14 +21,14 @@ def printBoard(brd):
 				brdList.append(' ')
 			else:
 				brdList.append(brd[(i,j)].name)
-	print brd[0:8] 
-	print brd[9:16]
-	print brd[17:24]
-	print brd[25:32]
-	print brd[33:40]
-	print brd[41:48]
-	print brd[49:56]
-	print brd[57:64]
+	print brdList[0:8] 
+	print brdList[8:16]
+	print brdList[16:24]
+	print brdList[24:32]
+	print brdList[32:40]
+	print brdList[40:48]
+	print brdList[48:56]
+	print brdList[56:64]
 
 def done(game, brd, player):
 	"""Return True if game is won or if game is unwinnable. Print some statement based on the condition."""
@@ -95,22 +95,24 @@ def getState():
 	"""detects how the board looks"""
 	return True, True
 
+def determineGame(strn):
+	if strn.lower() == "chess":
+		game = Chess()
+	elif strn.lower() == "checkers":
+		game = Checkers()
+	else:
+		game = tictactoe()
+	return game
+
 def createBoard(game):
 	"""initializes board"""
-	if game.lower() == "chess":
-		game = Chess
-		return game, Chess.initalboard()
-	elif game.lower() == "checkers":
-		game = checkers
-		checkers.initalboard()
-		return game, checkers.board
-	else:
-		game = tictactoe
-		return game, tictactoe.initalboard()
+	return game.initialBoard()
+	
 
-def run(game,curPlayer,playW, playB):
-	game, brd = createBoard(game)
-
+def run(strn,curPlayer,playW, playB):
+	game = determineGame(strn)
+	brd = createBoard(game)
+	print brd
 	printBoard(brd)
 	
 	player = curPlayer

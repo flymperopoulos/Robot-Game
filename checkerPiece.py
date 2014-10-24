@@ -1,13 +1,14 @@
 
-class checkerPiece:
+class CheckerPiece(object):
 	"""
 		checkerPiece that determines has an attribut if it is white or black and returns all possible moves
 	"""
 
 	def __init__(self, color, position):
 		self.color = color
+		self.name = color
 		self.position = position
-		self.isKing = isKing()
+		self.isKing = False
 
 	def possibleMoves(self, position):
 		moves = []
