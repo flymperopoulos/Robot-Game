@@ -201,10 +201,11 @@ class Chess(object):
 	def __init__(self, setupType = 0):
 		self.board = {}
 
-	def initiateBoard(self):
+	def initialBoard(self):
 		for i in range(1,9):
 			for j in range(1,9):
 				self.board[(i,j)] = 0
+		return self.board
 
 	def isChess(self):
 		return True
