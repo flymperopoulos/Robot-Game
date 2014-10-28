@@ -10,9 +10,11 @@ class CheckerPiece(object):
 		self.name = color + number
 		self.position = position
 		self.isKing = False
+		self._possibleMoves = []
 
 	def position(self):
 		return self.position
+
 
 	def possibleMoves(self, brd):
 		moves = []
@@ -46,8 +48,10 @@ class CheckerPiece(object):
 				kingMoves.append((self.position[0]-1, self.position[1]+1))
 				kingMoves.append((self.position[0]-1, self.position[1]-1))
 		if self.isKing:
+			self._possibleMoves = kingMoves
 			return kingMoves
 		else:
+			self._possibleMoves = moves
 			return moves
 
 
@@ -241,7 +245,7 @@ class CheckerPiece(object):
 
 										if brd.get((nm1[0]+2,nm1[1]-2)) == 0:   #3
 											realmove.append((nm1[0]+2,nm1[1]-2))
-			else:
+			elif brd.get(m).color != self.color:
 				if brd.get((m[0]-2,m[1]+2)) == 0:   #1
 					realmove.append((m[0]-2,m[1]+2))
 					newMoves = self.possibleMoves((m[0]-2,m[1]+2))

@@ -99,9 +99,10 @@ def makeMove(game, brd, move):
 		x = move[1]
 		y = move[2]
 		xp,yp = piece.position
-		if piece.validateMoves(brd):
-			brd[(xp,yp)] = 0
-			brd[(x,y)] = piece	
+		# validate move needs to be fixed. I can move pieces two spaces away when there is not a piece next to it in checkers.  
+		#Double jumps need to be fixed
+		if piece.validateMoves(brd): 
+			brd = game.move(piece,x,y)	
 			return brd
 		else: 
 			print 'invalid move'
@@ -150,10 +151,10 @@ def main():
 	inpt = raw_input("Game, Current player(w or b), Human or Computer, Human or Computer-- ")
 	usrInput = inpt.split()
 	if len(usrInput) == 4:
-		if usrInput[2].upper() == "HUMAN":
-			playW = readPlayerInput
-		else: 
+		if usrInput[2].upper() == "COMPUTER":
 			playW = computerMove
+		else: 
+			playW = readPlayerInput
 		if usrInput[2].upper() == "HUMAN":
 			playB = readPlayerInput
 		else: 

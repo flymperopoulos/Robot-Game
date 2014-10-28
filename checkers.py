@@ -50,3 +50,27 @@ class Checkers(object):
 
     def end(self):
         return False
+
+    def move(self, piece, x, y):
+        pos = piece.position
+        piece.position = (x,y)
+        self.board[pos] = 0
+        self.board[(x,y)] = piece
+        piece_taken = 0
+        if pos[1] - y == 2:
+            if pos[0] - x == 2:
+                piece_taken = self.board[(x+1,y+1)]
+                self.board[(x+1,y+1)] = 0
+            else:
+                piece_taken = self.board[(x-1,y+1)]
+                self.board[(x-1,y+1)] = 0
+        elif pos[1] - y == -2:
+            if pos[0] -x == 2:
+                piece_taken = self.board[(x+1,y-1)]
+                self.board[(x+1,y-1)] = 0
+            else:
+                piece_taken = self.board[(x-1,y-1)]
+                self.board[(x-1,y-1)] = 0
+        if piece_taken != 0:
+            piece_taken.position = 0  
+        return self.board
