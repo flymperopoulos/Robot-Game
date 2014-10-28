@@ -2,12 +2,11 @@ class Pawn:
 
 	"""Class for the Pawn Object piece"""
 
-	def __init__(self, position, color, name, state, change):
+	def __init__(self, position, color, name, state= 'pawn'):
 		self.position = position
 		self.color = color
-		self.name = 'p'
+		self.name = color +'p'+ str(name)
 		self.state = state
-		self.change = change
 
 	def possibleMoves(self):
 		x,y = self.position
@@ -55,7 +54,7 @@ class Bishop():
 	def __init__(self, position, color, name):
 		self.position = position
 		self.color = color
-		self.name = 'b'
+		self.name = color +'B' +str(name)
 
 	def possibleMoves(self):
 		x,y = self.position
@@ -84,10 +83,10 @@ class Rook:
 
 	"""Class for the Rook Object piece"""
 
-	def __init__(self, position, color, name, state):
+	def __init__(self, position, color, name):
 		self.position = position
 		self.color = color
-		self.name = 'r'
+		self.name = color + 'R'+str(name)
 
 	def possibleMoves(self):
 		x,y = self.position
@@ -119,7 +118,7 @@ class Knight:
 	def __init__(self, position, color, name):
 		self.position = position
 		self.color = color
-		self.name = 'k'
+		self.name = color +'N' +str(name)
 
 	def possibleMoves(self):
 		x,y = self.position
@@ -144,7 +143,7 @@ class King:
 	def __init__(self, position, color, name):
 		self.position = position
 		self.color = color
-		self.name = 'king'
+		self.name = color + 'K'+str(name)
 
 	def possibleMoves(self):
 		x,y = self.position
@@ -167,7 +166,7 @@ class Queen:
 	def __init__(self, position, color, name):
 		self.position = position
 		self.color = color
-		self.name = 'q'
+		self.name = color + 'Q' + str(name)
 
 	def possibleMoves(self):
 		queenMoves = []
@@ -205,6 +204,30 @@ class Chess(object):
 		for i in range(1,9):
 			for j in range(1,9):
 				self.board[(i,j)] = 0
+
+		for j in range(1,9):
+			self.board[(2,j)] = Pawn((2,j),'W',j)
+			self.board[(7,j)] = Pawn((7,j),'B',j)
+
+		self.board[(1,1)] = Rook((1,1),'W',1)
+		self.board[(1,8)] = Rook((1,8),'W',8)
+		self.board[(8,1)] = Rook((8,1),'B',1)
+		self.board[(8,8)] = Rook((8,8),'B',8)
+
+		self.board[(1,2)] = Knight((1,2),'W',2)
+		self.board[(1,7)] = Knight((1,7),'W',7)
+		self.board[(8,2)] = Knight((8,2),'B',2)
+		self.board[(8,7)] = Knight((8,7),'B',7)
+
+		self.board[(1,3)] = Bishop((1,3),'W',3)
+		self.board[(1,6)] = Bishop((1,6),'W',6)
+		self.board[(8,3)] = Bishop((8,3),'B',3)
+		self.board[(8,6)] = Bishop((8,6),'B',6)
+
+		self.board[(1,5)] = King((1,5),'W',1)
+		self.board[(1,4)] = Queen((1,4),'W',1)
+		self.board[(8,5)] = King((8,5),'B',1)
+		self.board[(8,4)] = Queen((8,4),'B',1)
 		return self.board
 
 	def isChess(self):
