@@ -33,51 +33,34 @@ import numpy as py
 # cv2.imshow('edges', edges)
 # cv2.imshow('stuff', img)
 
-im = cv2.imread('Checkers.png',0)
+im = cv2.imread('res/Checkers.png')\
+# im = cv2.imread('res/checkers_game.jpg')
+
 height, width = im.shape[:2]
-# imgray = cv2.cvtColor(im,cv2.COLOR_BGR2GRAY)
-edges = cv2.Canny(im,100,200)
+imgray = cv2.cvtColor(im,cv2.COLOR_BGR2GRAY)
 print height, width
 gridH = height/8
 gridW = width/8
 print height - gridH/2
-ret,thresh = cv2.threshold(edges,127,255,cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+
+# 
+ret,thresh = cv2.threshold(imgray,127,255,cv2.THRESH_BINARY | cv2.THRESH_OTSU)
 contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
-cnt = contours[0]
+
 print len(contours)
-pieces = {}
+pieces = [] 
 for cnt in contours:
-	m = cv2.moments(cnt)
-	# ellipse = cv2.fitEllipse(cnt)
-	# cv2.ellipse(im,ellipse,(0,255,0),2)
-	if m['m00']!= 0:
-		x,y = int(m['m10']/m['m00']), int(m['m01']/m['m00'])
-		# print x,y
-		if pieces.has_key((x,y)):
-			pieces[(x,y)] = pieces[(x,y)]+1
-		else:
-			pieces[(x,y)] = 1
-		# cv2.circle(edges,(x,y),3,(255,255,0),1)
-		cv2.circle(im,(x,y),3,(0,255,0),2)
-p = []
-print pieces
-for val in pieces:
-	if pieces[val] > 1:
-		p.append(val)
-		cv2.circle(edges,val,3,(255,255,0),1)
-		# cv2.circle(im,val,3,(0,255,0),2)
-print p
+	m = cv2.moments(cnt) 
+	# print cnt, cnt[0], len(cnt)
+	if len(cnt) >20: #and len(cnt)< 50:
+		if m['m00']!= 0:
+			x,y = int(m['m10']/m['m00']), int(m['m01']/m['m00'])
+			pieces.append((x,y))
+			cv2.circle(imgray,(x,y),3,(0,255,0),2)
 
-# one = pieces
-# for tup in pieces:
-# 	for tup1 in one:
-
-# print rpieces
-
-
-		
-cv2.drawContours(im, contours, -1, (0,255,0), 1)
-cv2.imshow('stuff', im)
-cv2.imshow('edge', edges)
+# cv2.drawContours(im, contours, -1, (0,255,0), 1)
+cv2.imshow('stuff', imgray)
+pieces = list(set(pieces))
+print pieces, len(pieces)
 
 cv2.waitKey(0)
