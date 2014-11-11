@@ -35,7 +35,7 @@ def printBoard(brd):
 	# print brdList[56:64]
 	for i in range(0,8):
 		print '  ',brdList[i*8],brdList[i*8+1],brdList[i*8+2],brdList[i*8+3],brdList[i*8+4],brdList[i*8+5],brdList[i*8+6],brdList[i*8+7]
-	print
+	return brdList
 
 def done(game, brd, player):
 	"""Return True if game is won or if game is unwinnable. Print some statement based on the condition."""
@@ -67,19 +67,23 @@ def validateMove(game, brd, move):
 def readPlayerInput(brd, player):
 	move = []
 	while True:
+		print "You are " + player
 		usrInput = raw_input("Piece newX newY or Q-- ")
 		if usrInput.upper() == 'Q':
 			sys.exit(0)
 		lis = usrInput.split()
 		if len(lis) == 3:
-			for i in brd:
-				if brd[i] != 0:
-					if brd[i].name == lis[0]:
-						move.append(brd[i])
-						move.append(int(lis[1]))
-						move.append(int(lis[2]))
-						print "I have your move"
-						return move
+			if lis[0][0] == player:
+				for i in brd:
+					if brd[i] != 0:
+						if brd[i].name == lis[0]:
+							move.append(brd[i])
+							move.append(int(lis[1]))
+							move.append(int(lis[2]))
+							print "I have your move"
+							return move
+			else:
+				print "Piece does not match player color"
 					# else: 
 						# print "Could not find " + lis[0] +' '+ lis[1]+' ' + lis[2]
 		else:
@@ -101,8 +105,12 @@ def makeMove(game, brd, move):
 		xp,yp = piece.position
 		# validate move needs to be fixed. I can move pieces two spaces away when there is not a piece next to it in checkers.  
 		#Double jumps need to be fixed
-		if piece.validateMoves(brd): 
+		print brd[(x,y)]
+		print x
+		print y
+		if (x,y) in piece.validateMoves(brd): 
 			brd = game.move(piece,x,y)	
+
 			return brd
 		else: 
 			print 'invalid move'
@@ -121,6 +129,7 @@ def determineGame(strn):
 		game = tictactoe()
 	return game
 
+
 def createBoard(game):
 	"""initializes board"""
 	return game.initialBoard()
@@ -129,8 +138,8 @@ def createBoard(game):
 def run(strn,curPlayer,playW, playB):
 	game = determineGame(strn)
 	brd = createBoard(game)
-	
-	printBoard(brd)
+	boardView = printBoard(brd)
+	previousBrdView = boardView
 	
 	player = curPlayer
 	while not done(game, brd, player):
@@ -139,8 +148,11 @@ def run(strn,curPlayer,playW, playB):
 		else:
 			move = playB(brd, player)
 		brd = makeMove(game,brd,move)
-		printBoard(brd)
-		player = otherPlayer(player)
+		boardView = printBoard(brd)
+		if boardView!=previousBrdView:
+			previousBrdView = boardView
+			player = otherPlayer(player)
+			print "Change player"
 	if hasWin(game, brd, player):
 		print "winner " + player
 	else: 
@@ -163,10 +175,7 @@ def main():
 	else:
 		print "Try again."
 
-
-	
-
-
+		
 	return True
 
 if __name__ in "__main__":
