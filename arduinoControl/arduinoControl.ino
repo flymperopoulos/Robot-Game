@@ -1,15 +1,20 @@
 #include <Servo.h>
-
 #include <Wire.h>
 #include <Adafruit_MotorShield.h>
 #include "utility/Adafruit_PWMServoDriver.h"
 
-Adafruit_MotorShield AFMS = Adafruit_MotorShield(); 
+Adafruit_MotorShield AFMSbot(0x60); 
+Adafruit_MotorShield AFMStop(0x61);
 
-Adafruit_StepperMotor *M1 = AFMS.getStepper(200, 2);
-Adafruit_StepperMotor *M2 = AFMS.getStepper(200, 1);
 
-int rpm = 3000;
+Adafruit_StepperMotor *M1 = AFMSbot.getStepper(200, 2);
+Adafruit_StepperMotor *M2 = AFMSbot.getStepper(200, 1);
+Adafruit_DCMotor *M3 = AFMStop.getMotor(1);
+
+Servo servo1;
+
+int pos = 0;
+int rpm = 300;
 int boardLength = 0;
 int ls = 13;
 int ws = 12;
@@ -22,40 +27,76 @@ void setup() {
   // initialize serial communications at 9600 bps
   Serial.begin(9600);
   // initializes motor  with shield  
-  AFMS.begin();
+  AFMSbot.begin();
   // Initialize my motor
   
   pinMode(ls, INPUT);
   pinMode(ws, INPUT);
+  servo1.attach(9);
   
   M1->setSpeed(rpm);
   M2->setSpeed(rpm);
+  M3->setSpeed(100);
   inputString.reserve(200);
-  M1->step(32000,FORWARD,SINGLE);
+  
 }
 
 void loop(){
-  Serial.println("Hello World");
+//  Serial.println("Hello World");
 
   while(Serial.available()){
+//    Serial.println("serial is open");
     char inChar = (char)Serial.read();
     inputString += inChar;
     delay(3);
   }
   if (inputString.length()>0){
-//    Serial.println(inputString);
     for (int i =0 ; i< inputString.length(); i++){
-//      Serial.println(inputString[i]);
       if (inputString[i] == 'Y'){
-        String x = inputString.substring(1,i);
-        String y = inputString.substring(i+1,inputString.length());
-        Serial.print(x+",");
-        Serial.println(y);
+        x = inputString.substring(1,i);
+        y = inputString.substring(i+1,inputString.length());
+//        Serial.println(y);
+//        Serial.print(x+",");
+//        Serial.println(y);
       }
     }
-    int n = x.toInt();
-    M1->step(400*15*n, FORWARD, SINGLE);
+//    Serial.println(x);
+    int xval = x.toInt();
+    int yval = y.toInt();
+//         Serial.println(yval);
+    Serial.println(xval);
+    M1->step(400*xval, FORWARD, SINGLE);
+    M1->step(0, RELEASE,SINGLE);
+
+    Serial.println(yval);
+    M2->step(400*yval, FORWARD, SINGLE);
+    M2->step(0, RELEASE,SINGLE);
+
+
+    Serial.println("run");
+//    servo1.write(180);
+//    M3-> setSpeed(100);
+//    M3-> run(FORWARD);
+    
     inputString = "";
+    for(pos = 160; pos > 100; pos -=1)  // goes from 0 degrees to 180 degrees 
+  {                                  // in steps of 1 degree 
+    servo1.write(pos);              // tell servo to go to position in variable 'pos' 
+    delay(15);                       // waits 15ms for the servo to reach the position 
+  } 
+  Serial.println("hand");
+    M3->setSpeed(200);
+      M3->run(FORWARD);
+  delay(5000);
+  for(pos = 100; pos<=160; pos+=1)     // goes from 180 degrees to 0 degrees 
+  {                                
+      servo1.write(pos);              // tell servo to go to position in variable 'pos' 
+      delay(15);                       // waits 15ms for the servo to reach the position 
+  } 
+      M3->setSpeed(0);
+      M3->run(FORWARD);
+    delay(5000);
+    
   }
   
 
