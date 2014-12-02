@@ -50,6 +50,7 @@ def getColorList(contours):
 	"""
 		returns the list of the coordinate points where the red pieces are
 	"""
+	i = 0
 	color = []   # center points of the colors
 	for cnt in contours:
 		m = cv2.moments(cnt)
@@ -58,7 +59,7 @@ def getColorList(contours):
 			x,y = int(m['m10']/m['m00']), int(m['m01']/m['m00'])
 			i= i+1
 			color.append((x,y))
-			cv2.circle(mask,(x,y),3,(0,255,0),2)
+			# cv2.circle(mask,(x,y),3,(0,255,0),2)
 
 	color = list(set(color))
 
@@ -92,13 +93,13 @@ def getBoardList(contours):
 			# print cnt[0], cnt[0][0][0], cnt[0][0][1]
 			cornerX, cornerY = cnt[0][0][0], cnt[0][0][1]
 
-			cv2.circle(imgray,(cnt[0][0][0],cnt[0][0][1]),10,(0,255,0),2)
-			cv2.circle(imgray,(centerX, centerY),10,(0,255,0),2)
+			# cv2.circle(imgray,(cnt[0][0][0],cnt[0][0][1]),10,(0,255,0),2)
+			# cv2.circle(imgray,(centerX, centerY),10,(0,255,0),2)
 			
 		if m['m00'] >100 and m['m00'] <750:
 			x,y = int(m['m10']/m['m00']), int(m['m01']/m['m00'])
 			pieces.append((x,y))
-			cv2.circle(imgray,(x,y),3,(0,255,0),2)
+			# cv2.circle(imgray,(x,y),3,(0,255,0),2)
 
 	pieces = list(set(pieces))
 
@@ -116,7 +117,7 @@ def imageToBoard(brdList, centerX, centerY, cornerX, cornerY):
 	for p in brdList:
 		# if p[0] >gridW*8 and p[1] >gridH*8:
 		xtemp = (p[0]-cornerX)/gridW +1
-		ytemp = (p[1]-cornerX)/gridH +1
+		ytemp = (p[1]-cornerY)/gridH +1
 		if xtemp < 9 and ytemp < 9  and xtemp >0  and ytemp > 0:
 			brdDict[xtemp, ytemp] = 1
 	return brdDict
@@ -131,7 +132,7 @@ def imageToBoardColor(brdDict, clrList, centerX, centerY, cornerX, cornerY):
 	gridH = (centerY - cornerY)*2/8 
 	for p in clrList:
 		xtemp = (p[0]-cornerX)/gridW +1
-		ytemp = (p[1]-cornerX)/gridH +1
+		ytemp = (p[1]-cornerY)/gridH +1
 		if (xtemp, ytemp) in brdDict:
 			clrDict[xtemp, ytemp] = "R"
 	return clrDict
@@ -140,8 +141,9 @@ def main():
 	"""
 		Main method that runs everything
 	"""
-	getState()
-	img = getImage('res/boardState.png')
+	# getState()
+	img = getImage('res/vidCheckers.png')
+	imgray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 	brdCountour = getContour(img)
 	clrCountour = getColor(img)
 	brdList, centerX, centerY, cornerX, cornerY = getBoardList(brdCountour)
@@ -152,8 +154,8 @@ def main():
 
 	print brdList
 	print clrList
-	print brdDict
-	print clrDict
+	print brdDict, len(brdDict)
+	print clrDict, len(clrDict)
 
 
 if __name__ in "__main__":

@@ -110,7 +110,7 @@ for cnt in contours:
 		x,y = int(m['m10']/m['m00']), int(m['m01']/m['m00'])
 		pieces.append((x,y))
 		cv2.circle(imgray,(x,y),3,(0,255,0),2)
-
+pieces = list(set(pieces))
 
 # print big, c, mom
 
@@ -118,44 +118,39 @@ img = im
 cv2.drawContours(img, contours, -1, (0,0,0), 2)
 cv2.imshow('stuff', imgray)
 cv2.imshow('img', img)
-# cv2.imshow('edges', edges)
-pieces = list(set(pieces))
 
 
-# gridH = height/8
-# gridW = width/8
+gridW = -(centerX - cornerX)*2/8
+gridH = (centerY - cornerY)*2/8
+print gridW, gridH
+print centerX, centerY
+print cornerX, cornerY
+
+d = {}
+xtemp=0
+ytemp =0 
+for p in pieces:
+	xtemp = (p[0]-cornerX)/gridW +1
+	ytemp = (p[1]-cornerX)/gridH +1
+	if xtemp < 9 and ytemp < 9  and xtemp >0  and ytemp > 0:
+		d[xtemp, ytemp] = 1
+print d, len(d)
+
+dc = {}
+xtemp=0
+ytemp =0 
+for p in color:
+	xtemp = (p[0]-cornerX)/gridW +1
+	ytemp = (p[1]-cornerX)/gridH +1
+	if (xtemp, ytemp) in d:
+		dc[xtemp, ytemp] = "R"
+print dc, len(dc)
 # d = {}
 # xtemp=0
 # ytemp =0 
 # for p in pieces:
-# 	xtemp = p[0]/gridW +1
-# 	ytemp = p[1]/gridH+1
-# 	d[xtemp, ytemp] = 1
-# # print d, len(d)
-
-# dc = {}
-# xtemp=0
-# ytemp =0 
-# for p in color:
-# 	xtemp = p[0]/gridW +1
-# 	ytemp = p[1]/gridH+1
-# 	if (xtemp, ytemp) in d:
-# 		dc[xtemp, ytemp] = "R"
-# print dc, len(dc)
-
-# gridW = (centerX - cornerX)*2/8
-# gridH = (centerY - cornerY)*2/8
-# print gridW, gridH
-# print centerX, centerY
-# print cornerX, cornerY
-
-# d = {}
-# xtemp=0
-# ytemp =0 
-# for p in pieces:
-# 	# if p[0] >gridW*8 and p[1] >gridH*8:
-# 	xtemp = (p[0]-cornerX)/gridW +1
-# 	ytemp = (p[1]-cornerX)/gridH +1
+# 	xtemp = -(p[0]- cornerX)/gridW +1
+# 	ytemp = (p[1]- cornerY)/gridH +1
 # 	if xtemp < 9 and ytemp < 9  and xtemp >0  and ytemp > 0:
 # 		d[xtemp, ytemp] = 1
 # print d, len(d)
@@ -164,38 +159,10 @@ pieces = list(set(pieces))
 # xtemp=0
 # ytemp =0 
 # for p in color:
-# 	xtemp = (p[0]-cornerX)/gridW +1
-# 	ytemp = (p[1]-cornerX)/gridH +1
+# 	xtemp = -(p[0]-cornerX)/gridW +1
+# 	ytemp = (p[1]-cornerY)/gridH +1
 # 	if (xtemp, ytemp) in d:
 # 		dc[xtemp, ytemp] = "R"
 # print dc, len(dc)
-
-def imageToBoard(coord, h, w):
-	gridH = height/8
-	gridW = width/8
-	d = {}
-	xtemp=0
-	ytemp =0 
-	for p in coord:
-		xtemp = p[0]/gridW +1
-		ytemp = p[1]/gridH+1
-		d[xtemp, ytemp] = 1
-	return d
-
-def imageToBoardColor(brd, col, h, w):
-	gridH = height/8
-	gridW = width/8
-	d = {}
-	xtemp=0
-	ytemp =0 
-	for p in col:
-		xtemp = p[0]/gridW +1
-		ytemp = p[1]/gridH+1
-		if (xtemp, ytemp) in brd:
-			d[xtemp, ytemp] = "R"
-	return d
-
-
-
 
 cv2.waitKey(0)
