@@ -24,7 +24,7 @@ def getState():
 # 	if cv2.waitKey(1) & 0xFF == ord(' '):
 # 		break
 
-# cv2.imwrite("res/vidMovedCheckers.png", frame)
+# cv2.imwrite("res/vidMovedCheckers.png", frame) 
 # cam.release()
 # cv2.destroyAllWindows()
 
@@ -32,7 +32,7 @@ def getState():
 # edges = cv2.Canny(img,100,200)
 
 # im = cv2.imread('res/checkerpic.jpg')
-im = cv2.imread('res/vidCheckers.png')
+im = cv2.imread('res/vidMovedCheckers.png')
 
 height, width = im.shape[:2]
 imgray = cv2.cvtColor(im,cv2.COLOR_BGR2GRAY)
@@ -106,7 +106,7 @@ for cnt in contours:
 		cv2.circle(imgray,(cnt[0][0][0],cnt[0][0][1]),10,(0,255,0),2)
 		cv2.circle(imgray,(centerX, centerY),10,(0,255,0),2)
 		
-	if m['m00'] >100 and m['m00'] <1000:
+	if m['m00'] >100 and m['m00'] <750:
 		x,y = int(m['m10']/m['m00']), int(m['m01']/m['m00'])
 		pieces.append((x,y))
 		cv2.circle(imgray,(x,y),3,(0,255,0),2)
@@ -115,7 +115,7 @@ for cnt in contours:
 # print big, c, mom
 
 img = im
-cv2.drawContours(img, contours, -1, (0,255,0), 1)
+cv2.drawContours(img, contours, -1, (0,0,0), 2)
 cv2.imshow('stuff', imgray)
 cv2.imshow('img', img)
 # cv2.imshow('edges', edges)
@@ -143,32 +143,32 @@ pieces = list(set(pieces))
 # 		dc[xtemp, ytemp] = "R"
 # print dc, len(dc)
 
-gridW = (centerX - cornerX)*2/8
-gridH = (centerY - cornerY)*2/8
-print gridW, gridH
-print centerX, centerY
-print cornerX, cornerY
+# gridW = (centerX - cornerX)*2/8
+# gridH = (centerY - cornerY)*2/8
+# print gridW, gridH
+# print centerX, centerY
+# print cornerX, cornerY
 
-d = {}
-xtemp=0
-ytemp =0 
-for p in pieces:
-	# if p[0] >gridW*8 and p[1] >gridH*8:
-	xtemp = (p[0]-cornerX)/gridW +1
-	ytemp = (p[1]-cornerX)/gridH +1
-	if xtemp < 9 and ytemp < 9  and xtemp >0  and ytemp > 0:
-		d[xtemp, ytemp] = 1
-print d, len(d)
+# d = {}
+# xtemp=0
+# ytemp =0 
+# for p in pieces:
+# 	# if p[0] >gridW*8 and p[1] >gridH*8:
+# 	xtemp = (p[0]-cornerX)/gridW +1
+# 	ytemp = (p[1]-cornerX)/gridH +1
+# 	if xtemp < 9 and ytemp < 9  and xtemp >0  and ytemp > 0:
+# 		d[xtemp, ytemp] = 1
+# print d, len(d)
 
-dc = {}
-xtemp=0
-ytemp =0 
-for p in color:
-	xtemp = (p[0]-cornerX)/gridW +1
-	ytemp = (p[1]-cornerX)/gridH +1
-	if (xtemp, ytemp) in d:
-		dc[xtemp, ytemp] = "R"
-print dc, len(dc)
+# dc = {}
+# xtemp=0
+# ytemp =0 
+# for p in color:
+# 	xtemp = (p[0]-cornerX)/gridW +1
+# 	ytemp = (p[1]-cornerX)/gridH +1
+# 	if (xtemp, ytemp) in d:
+# 		dc[xtemp, ytemp] = "R"
+# print dc, len(dc)
 
 def imageToBoard(coord, h, w):
 	gridH = height/8
