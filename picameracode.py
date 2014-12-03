@@ -7,9 +7,10 @@ def getState():
 	"""
 		takes the picture from the PiCamera and saves it to the desktop
 	"""
-	with picamera.PiCamera() as camera:
-		time.sleep(4)
-		camera.capture('/Robot-Game/res/boardState.png')
+	camera = picamera.PiCamera()
+	time.sleep(4)
+	camera.capture('/home/pi/Robot-Game/res/boardState.jpg')
+	camera.close()
 
 def getImage(filename):
 	"""
@@ -141,8 +142,9 @@ def main():
 	"""
 		Main method that runs everything
 	"""
-	# getState()
-	img = getImage('res/vidCheckers.png')
+	getState()
+	#img = getImage('/home/pi/Robot-Game/res/boardState.jpg')
+	img = getImage('/home/pi/Robot-Game/res/vidCheckers.png')
 	imgray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 	brdCountour = getContour(img)
 	clrCountour = getColor(img)
