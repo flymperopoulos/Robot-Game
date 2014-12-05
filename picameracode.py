@@ -159,6 +159,9 @@ def main():
 	print brdDict, len(brdDict)
 	print clrDict, len(clrDict)
 
-
+def pic():
+	getState()
+	
 if __name__ in "__main__":
-	main()
+	#main()
+	pic()
