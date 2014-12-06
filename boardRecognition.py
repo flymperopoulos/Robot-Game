@@ -31,8 +31,8 @@ def getState():
 # img = cv2.imread('circle.jpg',0)
 # edges = cv2.Canny(img,100,200)
 
-# im = cv2.imread('res/checkerpic.jpg')
-im = cv2.imread('res/vidMovedCheckers.png')
+im = cv2.imread('res/boardState.jpg')
+# im = cv2.imread('res/vidMovedCheckers.png')
 
 height, width = im.shape[:2]
 imgray = cv2.cvtColor(im,cv2.COLOR_BGR2GRAY)
@@ -87,10 +87,13 @@ centerX, centerY = 0 ,0
 c = 0
 big = 0
 mom = 0
-pieces = [] 
+pieces = []
 print len(contours)
 for cnt in contours:
 	m = cv2.moments(cnt)
+
+	# print cnt, len(cnt)
+	print m['m00']
 	if m['m00'] > big:
 		big = m['m00']
 		c = cnt
@@ -110,6 +113,11 @@ for cnt in contours:
 		x,y = int(m['m10']/m['m00']), int(m['m01']/m['m00'])
 		pieces.append((x,y))
 		cv2.circle(imgray,(x,y),3,(0,255,0),2)
+	if m['m00'] < 3000 and m['m00'] > 2500:
+		x,y = int(m['m10']/m['m00']), int(m['m01']/m['m00'])
+		pieces.append((x,y))
+		cv2.circle(imgray,(x,y),3,(0,255,0),5)
+
 pieces = list(set(pieces))
 
 # print big, c, mom
@@ -145,24 +153,5 @@ for p in color:
 	if (xtemp, ytemp) in d:
 		dc[xtemp, ytemp] = "R"
 print dc, len(dc)
-# d = {}
-# xtemp=0
-# ytemp =0 
-# for p in pieces:
-# 	xtemp = -(p[0]- cornerX)/gridW +1
-# 	ytemp = (p[1]- cornerY)/gridH +1
-# 	if xtemp < 9 and ytemp < 9  and xtemp >0  and ytemp > 0:
-# 		d[xtemp, ytemp] = 1
-# print d, len(d)
-
-# dc = {}
-# xtemp=0
-# ytemp =0 
-# for p in color:
-# 	xtemp = -(p[0]-cornerX)/gridW +1
-# 	ytemp = (p[1]-cornerY)/gridH +1
-# 	if (xtemp, ytemp) in d:
-# 		dc[xtemp, ytemp] = "R"
-# print dc, len(dc)
 
 cv2.waitKey(0)
