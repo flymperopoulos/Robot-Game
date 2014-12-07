@@ -1,34 +1,42 @@
-import chess
-#import checkers
+from chess import *
+from checkers import *
+import sys
+# from minmax import *
 #import tictactoe
 
-def printBoardttt(brd):
-	"""displays board"""
-	brdList = []
-	for i in range(1,4):
-		for j in range(1,4):
-			if brd[(i,j)] == 0:
-				brdList.append(' ')
-			else:
-				brdList.append(brd[(i,j)].name)
+# def printBoardttt(brd):
+# 	"""displays board"""
+# 	brdList = []
+# 	for i in range(1,4):
+# 		for j in range(1,4):
+# 			if brd[(i,j)] == 0:
+# 				brdList.append(' ')
+# 			else:
+# 				brdList.append(brd[(i,j)].name)
 
 def printBoard(brd):
 	"""displays board"""
 	brdList = []
-	for i in range(1,9):
-		for j in range(1,9):
+	for j in range(1,9):
+		for i in range(1,9):
 			if brd[(i,j)] == 0:
-				brdList.append(' ')
+				brdList.append(' . ')
 			else:
-				brdList.append(brd[(i,j)].name)
-	print brd[0:8] 
-	print brd[9:16]
-	print brd[17:24]
-	print brd[25:32]
-	print brd[33:40]
-	print brd[41:48]
-	print brd[49:56]
-	print brd[57:64]
+				if len(brd[(i,j)].name) == 3:
+					brdList.append(brd[(i,j)].name)
+				else:
+					brdList.append(brd[(i,j)].name + ' ')
+	# print brdList[0:8] 
+	# print brdList[8:16]
+	# print brdList[16:24]
+	# print brdList[24:32]
+	# print brdList[32:40]
+	# print brdList[40:48]
+	# print brdList[48:56]
+	# print brdList[56:64]
+	for i in range(0,8):
+		print '  ',brdList[i*8],brdList[i*8+1],brdList[i*8+2],brdList[i*8+3],brdList[i*8+4],brdList[i*8+5],brdList[i*8+6],brdList[i*8+7]
+	return brdList
 
 def done(game, brd, player):
 	"""Return True if game is won or if game is unwinnable. Print some statement based on the condition."""
@@ -57,20 +65,28 @@ def validateMove(game, brd, move):
 	"""detects if a move is legal"""
 	return True
 
-def readPlayerInput(brd):
+def readPlayerInput(brd, player):
+	move = []
 	while True:
-		usrInput = raw_input("Piece newX newY or Q")
+		print "You are " + player
+		usrInput = raw_input("Piece newX newY or Q-- ")
 		if usrInput.upper() == 'Q':
 			sys.exit(0)
 		lis = usrInput.split()
-		if len(move) == 5:
-			for i in brd:
-				if brd[i] != 0:
-					if (lis[1],lis[2]) in brd[i].possibleMoves() and brd[i].name == lis[0]:
-						move[0] = board[i]
-						move[1] = int(move[1])
-						move[2] = int(move[2])
-						return move
+		if len(lis) == 3:
+			if lis[0][0] == player:
+				for i in brd:
+					if brd[i] != 0:
+						if brd[i].name == lis[0]:
+							move.append(brd[i])
+							move.append(int(lis[1]))
+							move.append(int(lis[2]))
+							print "I have your move"
+							return move
+			else:
+				print "Piece does not match player color"
+					# else: 
+						# print "Could not find " + lis[0] +' '+ lis[1]+' ' + lis[2]
 		else:
 			print "Invalid length. Try again."
 		
@@ -87,31 +103,44 @@ def makeMove(game, brd, move):
 		piece = move[0]
 		x = move[1]
 		y = move[2]
-		if validateMove():
-			brd[i] == 0
-			brd[(x,y)] == piece			
+		xp,yp = piece._position
+		# validate move needs to be fixed. I can move pieces two spaces away when there is not a piece next to it in checkers.  
+		#Double jumps need to be fixed
+		print brd[(x,y)]
+		print x
+		print y
+		if (x,y) in piece.validateMoves(brd): 
+			brd = game.move(piece,x,y)	
+
+			return brd
+		else: 
+			print 'invalid move'
+			return brd	
 
 def getState():
 	"""detects how the board looks"""
 	return True, True
 
+def determineGame(strn):
+	if strn.lower() == "chess":
+		game = Chess()
+	elif strn.lower() == "checkers":
+		game = Checkers()
+	else:
+		game = tictactoe()
+	return game
+
+
 def createBoard(game):
 	"""initializes board"""
-	if game.lowercase() == "chess":
-		game = chess
-		return game, chess.initalboard()
-	elif game.lowercase() == "checkers":
-		game = checkers
-		return game, checkers.initalboard()
-	else:
-		game = tictactoe
-		return game, tictactoe.initalboard()
-	return True
+	return game.initialBoard()
+	
 
-def run(game,curPlayer,playW, playB):
-	game, brd = createBoard(game)
-
-	printBoard(brd)
+def run(strn,curPlayer,playW, playB):
+	game = determineGame(strn)
+	brd = createBoard(game)
+	boardView = printBoard(brd)
+	previousBrdView = boardView
 	
 	player = curPlayer
 	while not done(game, brd, player):
@@ -120,29 +149,34 @@ def run(game,curPlayer,playW, playB):
 		else:
 			move = playB(brd, player)
 		brd = makeMove(game,brd,move)
-		printBoard(brd)
-		player = otherPlayer()
-	if hasWin(brd):
+		boardView = printBoard(brd)
+		if boardView!=previousBrdView:
+			previousBrdView = boardView
+			player = otherPlayer(player)
+			print "Change player"
+	if hasWin(game, brd, player):
 		print "winner " + player
 	else: 
 		print "Stalemate"
 
 def main():
 	game, brd = getState()
-	inpt = raw_input("Game, Current player(w or b), Human or Computer, Human or Computer.")
+	inpt = raw_input("Game, Current player(w or b), Human or Computer, Human or Computer-- ")
 	usrInput = inpt.split()
-	if usrInput[2].upper() == "HUMAN":
-		playW = readPlayerInput()
-	else: 
-		playW = computerMove()
-	if usrInput[2].upper() == "HUMAN":
-		playB = readPlayerInput()
-	else: 
-		playB = computerMove()
+	if len(usrInput) == 4:
+		if usrInput[2].upper() == "COMPUTER":
+			playW = computerMove
+		else: 
+			playW = readPlayerInput
+		if usrInput[2].upper() == "HUMAN":
+			playB = readPlayerInput
+		else: 
+			playB = computerMove
+		run(usrInput[0],usrInput[1].upper(), playW, playB)
+	else:
+		print "Try again."
 
-	run(usrInput[0],usrInput[1].upper(), playW, playB)
-
-
+		
 	return True
 
 if __name__ in "__main__":
