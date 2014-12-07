@@ -1,4 +1,4 @@
-from checkerPiece import *
+from pieces import *
 
 class Checkers(object):
     """
@@ -52,8 +52,8 @@ class Checkers(object):
     def move(self, piece, x, y):
         # sameMove = False
         # while not sameMove:
-        pos = piece.position
-        piece.position = (x,y)
+        pos = piece.position()
+        piece._position = (x,y)
         self.board[pos] = 0
         self.board[(x,y)] = piece
         piece_taken = 0
@@ -72,7 +72,7 @@ class Checkers(object):
                 piece_taken = self.board[(x-1,y-1)]
                 self.board[(x-1,y-1)] = 0
         if piece_taken != 0:
-            piece_taken.position = 0 
+            piece_taken._position = 0 
             # moves2 = piece.validateMoves()
                 
         return self.board

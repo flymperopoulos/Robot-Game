@@ -1,23 +1,24 @@
 from chess import *
 from checkers import *
 import sys
+# from minmax import *
 #import tictactoe
 
-def printBoardttt(brd):
-	"""displays board"""
-	brdList = []
-	for i in range(1,4):
-		for j in range(1,4):
-			if brd[(i,j)] == 0:
-				brdList.append(' ')
-			else:
-				brdList.append(brd[(i,j)].name)
+# def printBoardttt(brd):
+# 	"""displays board"""
+# 	brdList = []
+# 	for i in range(1,4):
+# 		for j in range(1,4):
+# 			if brd[(i,j)] == 0:
+# 				brdList.append(' ')
+# 			else:
+# 				brdList.append(brd[(i,j)].name)
 
 def printBoard(brd):
 	"""displays board"""
 	brdList = []
-	for i in range(1,9):
-		for j in range(1,9):
+	for j in range(1,9):
+		for i in range(1,9):
 			if brd[(i,j)] == 0:
 				brdList.append(' . ')
 			else:
@@ -102,7 +103,7 @@ def makeMove(game, brd, move):
 		piece = move[0]
 		x = move[1]
 		y = move[2]
-		xp,yp = piece.position
+		xp,yp = piece._position
 		# validate move needs to be fixed. I can move pieces two spaces away when there is not a piece next to it in checkers.  
 		#Double jumps need to be fixed
 		print brd[(x,y)]

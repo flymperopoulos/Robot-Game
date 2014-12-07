@@ -28,8 +28,8 @@ class CheckerPiece(object):
 			elif self.position[0] == 8 and self.isKing == False: 
 				return moves
 			else:
+				moves.append((self.position[0]+1, self.position[1]-1))
 				moves.append((self.position[0]+1, self.position[1]+1))
-				moves.append((self.position[0]-1, self.position[1]+1))
 				kingMoves.append((self.position[0]+1, self.position[1]+1))
 				kingMoves.append((self.position[0]+1, self.position[1]-1))
 				kingMoves.append((self.position[0]-1, self.position[1]+1))
@@ -44,8 +44,8 @@ class CheckerPiece(object):
 			elif self.position[0] == 1 and self.isKing == False:
 				return moves
 			else:
-				moves.append((self.position[0]+1, self.position[1]-1))
 				moves.append((self.position[0]-1, self.position[1]-1))
+				moves.append((self.position[0]-1, self.position[1]+1))
 				kingMoves.append((self.position[0]+1, self.position[1]+1))
 				kingMoves.append((self.position[0]+1, self.position[1]-1))
 				kingMoves.append((self.position[0]-1, self.position[1]+1))
