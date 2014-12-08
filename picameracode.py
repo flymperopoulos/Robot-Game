@@ -138,7 +138,7 @@ def imageToBoardColor(brdDict, clrList, centerX, centerY, cornerX, cornerY):
 			clrDict[xtemp, ytemp] = "R"
 	return clrDict
 
-def main():
+def picam_main():
 	"""
 		Main method that runs everything
 	"""
@@ -158,6 +158,7 @@ def main():
 	print clrList
 	print brdDict, len(brdDict)
 	print clrDict, len(clrDict)
+	return brdDict, clrDict
 
 def pic():
 	getState()

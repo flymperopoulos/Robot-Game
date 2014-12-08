@@ -1,6 +1,7 @@
 from chess import *
 from checkers import *
 import sys
+from picameracode import *
 # from minmax import *
 #import tictactoe
 
@@ -23,7 +24,7 @@ def printBoard(brd):
 				brdList.append(' . ')
 			else:
 				if len(brd[(i,j)].name) == 3:
-					brdList.append(brd[(i,j)].name)
+					brdList.append(brd[(i,j)].name)s
 				else:
 					brdList.append(brd[(i,j)].name + ' ')
 	# print brdList[0:8] 
@@ -65,7 +66,7 @@ def validateMove(game, brd, move):
 	"""detects if a move is legal"""
 	return True
 
-def readPlayerInput(brd, player):
+def readPlayerInput_test(brd, player):
 	move = []
 	while True:
 		print "You are " + player
@@ -91,14 +92,19 @@ def readPlayerInput(brd, player):
 			print "Invalid length. Try again."
 		
 	return
-
+def humanMove(brd,player):
+	#needs a little work
+	d = brd
+	while d == brd:
+		d = getState(brd)
+	return d, None
 def computerMove():
 	return
 
 def makeMove(game, brd, move):
 	"""Makes a legal move based on current game rules"""
 	if move == None:
-		return
+		return brd
 	else: 
 		piece = move[0]
 		x = move[1]
@@ -117,9 +123,41 @@ def makeMove(game, brd, move):
 			print 'invalid move'
 			return brd	
 
-def getState():
+def getState(board):
 	"""detects how the board looks"""
-	return True, True
+	dic1, dic2 = picam_main()
+	d= createBoard(dic1, dic2)
+	d2 = compareBoard(board,d)
+	return d2
+
+def createBoard(camBrd, colorBrd):
+	d = {}
+	for keys in cam.keys():
+		if keys in colorBrd:
+			d[keys] = CheckerPiece("W", keys, "0")
+		else:
+			d[keys] = CheckerPiece("B", keys, "0")
+	return d
+
+
+
+def compareBoard(brd, finalCamBoard):
+	d = {}
+	for pieces in brd.values():
+		for camPieces in finalCamBoard.values():
+			# adding the "W" (human) pieces. There are only going to be one piece that changed position
+			# print pieces.color, pieces.position, pieces.name
+			if pieces.color == "W" and camPieces.color == "W" and pieces.position == camPieces.position:
+				# print "first if", pieces.color, pieces.position, pieces.name
+				d[pieces.position] = CheckerPiece("W", pieces.position, pieces.name[1])
+			elif pieces.color == "W" and camPieces.color == "W":
+				# print "else", pieces.color, pieces.position, pieces.name
+				d[camPieces.position] = CheckerPiece("W", camPieces.position, pieces.name[1])
+			# adding the "B" (computer) pieces. In checkers only thing that can happen is pieces being taken away
+			if pieces.color == "B" and camPieces.color == "B" and pieces.position == camPieces.position:
+				d[pieces.position] = CheckerPiece("B", pieces.position, pieces.name[1])
+
+	return d
 
 def determineGame(strn):
 	if strn.lower() == "chess":
@@ -137,7 +175,7 @@ def createBoard(game):
 	
 
 def run(strn,curPlayer,playW, playB):
-	game = determineGame(strn)
+	game = determineGame('checkers')
 	brd = createBoard(game)
 	boardView = printBoard(brd)
 	previousBrdView = boardView
@@ -145,9 +183,9 @@ def run(strn,curPlayer,playW, playB):
 	player = curPlayer
 	while not done(game, brd, player):
 		if player == 'W':
-			move = playW(brd, player)
+			brd,move = playW(brd, player)
 		else:
-			move = playB(brd, player)
+			brd,move = playB(brd, player)
 		brd = makeMove(game,brd,move)
 		boardView = printBoard(brd)
 		if boardView!=previousBrdView:
@@ -160,21 +198,25 @@ def run(strn,curPlayer,playW, playB):
 		print "Stalemate"
 
 def main():
-	game, brd = getState()
-	inpt = raw_input("Game, Current player(w or b), Human or Computer, Human or Computer-- ")
+	brd = getState()
+	inpt = raw_input("test, Current player(w or b), Human or Computer, Human or Computer-- ")
 	usrInput = inpt.split()
-	if len(usrInput) == 4:
-		if usrInput[2].upper() == "COMPUTER":
-			playW = computerMove
-		else: 
-			playW = readPlayerInput
-		if usrInput[2].upper() == "HUMAN":
-			playB = readPlayerInput
-		else: 
-			playB = computerMove
-		run(usrInput[0],usrInput[1].upper(), playW, playB)
+	# if len(usrInput) == 4:
+	if usrInput[2].upper() == "COMPUTER":
+		playW = computerMove
 	else:
-		print "Try again."
+		if usrInput[0].upper() = 'TEST': 
+			playW = readPlayerInput_test
+		elif len(usrInput) == 3:
+			playW = humanMove
+	if usrInput[2].upper() == "HUMAN":
+		if usrInput[0].upper() = 'TEST': 
+			playB = readPlayerInput_test
+		elif len(usrInput) == 3:
+			playB = humanMove
+	else: 
+		playB = computerMove
+	run(usrInput[0],usrInput[1].upper(), playW, playB)
 
 		
 	return True
