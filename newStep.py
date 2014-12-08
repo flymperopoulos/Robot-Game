@@ -1,5 +1,5 @@
 import serial
-
+import time
 
 STEPS_PER_INCH = 3200
 
@@ -8,7 +8,8 @@ def send_tuple(tup):
 	# x = tup[0]
 	# y = tup[1]
 	with serial.Serial('/dev/tty.usbmodemfd121',9600) as ser:
-	    if ser.isOpen():
+            time.sleep(2)
+            if ser.isOpen():
                 ser.write(str(tup))
                 print "Serial is Open"
 	print "Done Sending"
