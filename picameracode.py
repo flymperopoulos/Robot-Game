@@ -9,7 +9,7 @@ def getState():
 	"""
 	camera = picamera.PiCamera()
 	time.sleep(4)
-	camera.capture('/home/pi/Robot-Game/res/boardState.jpg')
+	camera.capture('/home/pi/Robot-Game/res/boardStateOne.jpg')
 	camera.close()
 
 def getImage(filename):
