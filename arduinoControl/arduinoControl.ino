@@ -65,12 +65,12 @@ void loop(){
     int yval = y.toInt();
 //         Serial.println(yval);
     Serial.println(xval);
-    M1->step(400*xval, FORWARD, SINGLE);
+    M1->step(400*xval, FORWARD, DOUBLE);
 //    M1->step(0, RELEASE,SINGLE);
     M1->release();
     
     Serial.println(yval);
-    M2->step(400*yval, FORWARD, SINGLE);
+    M2->step(400*yval, FORWARD, DOUBLE);
 //    M2->step(0, RELEASE,SINGLE);
     M2->release();
 
