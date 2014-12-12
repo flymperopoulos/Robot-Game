@@ -186,7 +186,14 @@ def humanMove(game, brd, player):
         d = getState(brd)
     return d, None
 def computerMove(game, brd, player):
-    return best_move(game,brd,player)
+    moves = []
+    pieces = grab_pieces(brd,player)
+    for piece in pieces:
+        m = piece.validateMoves()
+        for move in m:
+            moves.append(move)
+    move = random.choice(moves)
+    return board, move
 
 def makeMove(game, brd, move):
     """Makes a legal move based on current game rules"""
