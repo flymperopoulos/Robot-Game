@@ -8,7 +8,7 @@ def getState():
 		takes the picture from the PiCamera and saves it to the desktop
 	"""
 	camera = picamera.PiCamera()
-	time.sleep(4)
+	time.sleep(1)
 	camera.capture('/home/pi/Robot-Game/res/boardStateNew.jpg')
 	camera.close()
 
@@ -100,12 +100,7 @@ def getBoardList(contours):
 	for cnt in contours:
 	
 		m = cv2.moments(cnt)
-		if m['m00'] > big: # trying to find the biggest contour
-			big = m['m00']
-			c = cnt
-			mom = m
-
-		if m['m00'] >10000 and m['m00'] <100000:
+		if m['m00'] >100000 and m['m00'] <220000:
 			centerX, centerY = int(m['m10']/m['m00']), int(m['m01']/m['m00'])
 			cornerX, cornerY = cnt[0][0][0], cnt[0][0][1]
 
@@ -162,7 +157,7 @@ def picam_main():
 	brdCountour = getContour(img)
 	# clrCountour = getColor(img)
 	brdList, centerX, centerY, cornerX, cornerY = getBoardList(brdCountour)
-	clrList = getColorList(brdCountour)
+	clrList = getTriangleList(brdCountour)
 
 	brdDict = imageToBoard(brdList, centerX, centerY, cornerX, cornerY)
 	clrDict = imageToBoardColor(brdDict, clrList ,centerX, centerY, cornerX, cornerY)
