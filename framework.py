@@ -275,6 +275,7 @@ def get_State(board):
     if out == None:
         print "bull"
         return None
+    dic1, dic2 = out
     d= createBoard(dic1, dic2)
     d2 = compareBoard(board,d)
     return d2
@@ -293,19 +294,23 @@ def createBoard(camBrd, colorBrd):
 
 def compareBoard(brd, finalCamBoard):
     d = {}
+    for i in range(1,9):
+	for j in range(1,9):
+	    d[(i,j)] = 0
     for pieces in brd.values():
         for camPieces in finalCamBoard.values():
             # adding the "W" (human) pieces. There are only going to be one piece that changed position
             # print pieces.color, pieces.position, pieces.name
-            if pieces.color == "W" and camPieces.color == "W" and pieces.position == camPieces.position:
+            if pieces != 0:
+	        if pieces.color == "W" and camPieces.color == "W" and pieces.position == camPieces.position:
                 # print "first if", pieces.color, pieces.position, pieces.name
-                d[pieces.position] = CheckerPiece("W", pieces.position, pieces.name[1])
-            elif pieces.color == "W" and camPieces.color == "W":
+                    d[pieces.position] = CheckerPiece("W", pieces.position, pieces.name[1])
+                elif pieces.color == "W" and camPieces.color == "W":
                 # print "else", pieces.color, pieces.position, pieces.name
-                d[camPieces.position] = CheckerPiece("W", camPieces.position, pieces.name[1])
+                    d[camPieces.position] = CheckerPiece("W", camPieces.position, pieces.name[1])
             # adding the "B" (computer) pieces. In checkers only thing that can happen is pieces being taken away
-            if pieces.color == "B" and camPieces.color == "B" and pieces.position == camPieces.position:
-                d[pieces.position] = CheckerPiece("B", pieces.position, pieces.name[1])
+                if pieces.color == "B" and camPieces.color == "B" and pieces.position == camPieces.position:
+                    d[pieces.position] = CheckerPiece("B", pieces.position, pieces.name[1])
 
     return d
 
@@ -319,7 +324,7 @@ def compareBoard(brd, finalCamBoard):
 #     return game
 
 
-def createBoard(game):
+def createInitialBoard(game):
     """initializes board"""
     return game.initialBoard()
     
@@ -327,7 +332,7 @@ def createBoard(game):
 def run(strn,curPlayer,playW, playB):
     """Gameplay Loop"""
     game = Checkers()
-    brd = createBoard(game)
+    brd = createInitialBoard(game)
     boardView = printBoard(brd)
     previousBrdView = boardView
     
