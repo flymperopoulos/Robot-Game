@@ -1,11 +1,12 @@
 from chess import *
 from checkers import *
 import sys
-# from picameracode import *
+from picameracode import *
 import random
 # from minmax import *
 #import tictactoe
 import serial
+import cv2
 
 #Global Variables 
 # STEPS_PER_INCH = 3200
@@ -31,6 +32,18 @@ EDGE = 10
 #               brdList.append(' ')
 #           else:
 #               brdList.append(brd[(i,j)].name)
+def send_tuple(tup,tup2):
+    print "Sending Tuple"
+    x = tup[0]
+    y = tup[1]
+    x2 = tup2[0]
+    y2 = tup2[1]
+    with serial.Serial('/dev/tty.usbmodemfa131',9600) as ser:
+        if ser.isOpen():
+                ser.write('X'+str(x)+'Y'+str(y)+'X'+ str(x2)+'Y'+str(y2))
+                print "Serial is Open"
+    print "Done Sending"
+
 
 def utility (board):
     """Evaluation function for the board"""
@@ -243,6 +256,7 @@ def computerMove(game, brd, player):
     x1,y1 = piece.position()
     x2 = move[1]
     y2 = move[2]
+    send_tuple((x1,y1),(x2,y2))
     return brd, move
 
 def makeMove(game, brd, move):
@@ -348,8 +362,8 @@ def run(strn,curPlayer,playW, playB):
         print "Stalemate"
 
 def main():
-    inpt = raw_input("test, Current player(w or b) ")
-    usrInput = inpt.split()
+    # inpt = raw_input("test, Current player(w or b) ")
+    # usrInput = inpt.split()
     # OLD VERSION
     # if len(usrInput) == 4:
     #   if usrInput[2].upper() == "COMPUTER":
@@ -370,6 +384,8 @@ def main():
     # else:
     #   playW = humanMove
     #   playB = computerMove
+    inpt = sys.argv
+    usrInput = inpt[1:]
     if inpt != '':
         if usrInput[0].upper() == 'TEST':
             if len(usrInput) == 2:
