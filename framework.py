@@ -158,13 +158,14 @@ def printBoard(brd):
     brdList = []
     for j in range(1,9):
         for i in range(1,9):
-            if brd[(i,j)] == 0:
-                brdList.append(' . ')
-            else:
-                if len(brd[(i,j)].name) == 3:
-                    brdList.append(brd[(i,j)].name)
+            if brd != None:
+                if brd[(i,j)] == 0:
+                    brdList.append(' . ')
                 else:
-                    brdList.append(brd[(i,j)].name + ' ')
+                    if len(brd[(i,j)].name) == 3:
+                        brdList.append(brd[(i,j)].name)
+                    else:
+                        brdList.append(brd[(i,j)].name + ' ')
     # print brdList[0:8] 
     # print brdList[8:16]
     # print brdList[16:24]
