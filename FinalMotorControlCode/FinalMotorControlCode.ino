@@ -1,140 +1,104 @@
-#include <Servo.h> 
-#include <Adafruit_MotorShield.h>
+#include <Servo.h>
 #include <Wire.h>
+#include <Adafruit_MotorShield.h>
 #include "utility/Adafruit_PWMServoDriver.h"
 
-// Shield definition used for pump
-Adafruit_MotorShield AFMS(0x60);
-Adafruit_DCMotor *M3 = AFMS.getMotor(3);
+Adafruit_MotorShield AFMSbot(0x61); 
+//Adafruit_MotorShield AFMSbot =Adafruit_MotorShield(); 
+Adafruit_MotorShield AFMStop(0x60);
 
-// Servo definition initialization
-Servo myservo;  
-int pos = 0;    
+Adafruit_StepperMotor *M1 = AFMSbot.getStepper(200, 2);
+Adafruit_StepperMotor *M2 = AFMSbot.getStepper(200, 1);
+Adafruit_DCMotor *M3 = AFMStop.getMotor(1);
 
-// String that gets populated with coordinates to move to
+Servo servo1;
+
+int pos = 0;
+int rpm = 300;
+int boardLength = 0;
+const int servoPin = 9;
+const int ledXGreen = 13;
+const int ledYGreen = 12;
+
+
+int lengthSwitch = HIGH;
+int widthSwitch = HIGH;
+
 String inputString = "";
+String x1;
+String y1;
+String x2;
+String y2;
 
-// Definition of Pins - stepPin, dirPin, motorXPin, motorYPin
-const int stepXPin = 13;     
-const int dirXPin =  12;  
-const int motorXPin = 11;
-
-const int stepYPin = 10;     
-const int dirYPin =  9;  
-const int motorYPin = 8;
-
-// The number of steps in one full motor rotation
-const int stepsInFullRound = 400;
-
-// Set pins
 void setup() {
-
   // initialize serial communications at 9600 bps
   Serial.begin(9600);
 
-  // initializes motor  with shield  
-  myservo.attach(7);
-  AFMS.begin();
-
-  // step and dir pins for motorX
-  pinMode(stepXPin, OUTPUT);      
-  pinMode(dirXPin, OUTPUT);
-
-  // step and dir pins for motorY
-  pinMode(stepYPin, OUTPUT);      
-  pinMode(dirYPin, OUTPUT);
-
-  digitalWrite(stepXPin, LOW);
-  digitalWrite(dirXPin, LOW); 
-
-  digitalWrite(stepYPin, LOW);
-  digitalWrite(dirYPin, LOW); 
-
+  // initializes motors and stepper with shield  
+  AFMSbot.begin();
+  AFMStop.begin();
+ 
+  pinMode(ledXGreen, INPUT);
+  pinMode(ledYGreen, INPUT);
+  
+  servo1.attach(servoPin);
+  servo1.write(0);
+  
+  M1->setSpeed(rpm);
+  M2->setSpeed(rpm);
   inputString.reserve(200);
 }
 
-// Runs the motor in X according to a chosen direction, speed (rounds per seconds) and the number of steps
-void runX(boolean runForward, double speedRPS, int stepCount) {
-  digitalWrite(dirXPin, runForward);
-  for (int i = 0; i < stepCount; i++) {
-    digitalWrite(stepXPin, HIGH);
-    holdHalfCylce(speedRPS);
-    digitalWrite(stepXPin, LOW);
-    holdHalfCylce(speedRPS);
+void runXY(int xVal, int yVal, boolean xMovement, boolean yMovement){
+
+  if (xMovement){
+    M1->step(4700*xVal, FORWARD, DOUBLE);
+  } else {
+    M1->step(4700*xVal, BACKWARD, DOUBLE);
   }
-}
-
-// Runs the motor in X according to a chosen direction, speed (rounds per seconds) and the number of steps 
-void runY(boolean runForward, double speedRPS, int stepCount) {
-  digitalWrite(dirYPin, runForward);
-  for (int i = 0; i < stepCount; i++) {
-    digitalWrite(stepYPin, HIGH);
-    holdHalfCylce(speedRPS);
-    digitalWrite(stepYPin, LOW);
-    holdHalfCylce(speedRPS);
+  
+  M1->release();
+  
+  if (yMovement){
+    M2->step(4400*yVal, FORWARD, DOUBLE);
+  } else {
+    M2->step(4400*yVal, BACKWARD, DOUBLE);
   }
+
+  M2->release();
 }
 
-// A custom delay function used in the run()-method
-void holdHalfCylce(double speedRPS) {
-  long holdTime_us = (long)(1.0 / (double) stepsInFullRound / speedRPS / 2.0 * 1E6);
-  int overflowCount = holdTime_us / 65535;
-  for (int i = 0; i < overflowCount; i++) {
-    delayMicroseconds(65535);
-  }
-  delayMicroseconds((unsigned int) holdTime_us);
-}
-
-// Runs the motors to the position of the checker piece
-void runToPlace(double speedRPS, int rounds) {
-  // Moves to the place the piece is
-  runX(true, speedRPS, stepsInFullRound * rounds);
-  delay(1000);
-  runY(true, speedRPS, stepsInFullRound * rounds);
-  delay(1000); 
-}
-
-// Picks up the checker piece
 void zAxisPickUp(){
 
-  Serial.println("going down");
-  for(pos = 60; pos < 300; pos +=1)  // goes from 0 degrees to 180 degrees 
+ Serial.println("going down");
+  for(pos = 10; pos < 85; pos +=1)  // goes from 0 degrees to 180 degrees 
     {                                  // in steps of 1 degree 
-      myservo.write(pos);              // tell servo to go to position in variable 'pos' 
-      delay(15);                       // waits 15ms for the servo to reach the position 
+      servo1.write(pos);              // tell servo to go to position in variable 'pos' 
+      delay(50);                       // waits 15ms for the servo to reach the position 
     } 
+    delay(2000);
         M3->setSpeed(240);
         M3->run(FORWARD);
-    delay(2000);
+    delay(5000);
   Serial.println("going up");
-  for(pos = 300; pos> 60; pos-=1)
+  for(pos = 85; pos> 10; pos-=1)
        // goes from 180 degrees to 0 degrees 
     {                                
-      myservo.write(pos);              // tell servo to go to position in variable 'pos' 
-      delay(15);                       // waits 15ms for the servo to reach the position 
+      servo1.write(pos);              // tell servo to go to position in variable 'pos' 
+      delay(50);                       // waits 15ms for the servo to reach the position 
     }    
   delay(2000);
 }
 
-
-// Re-positions the checkers piece
-void runToNewPlace(double speedRPS, int rounds, boolean moveDirX, boolean modeDirY) {
-  // Moves to the place the piece is
-  runX(moveDirX, speedRPS, stepsInFullRound * rounds);
-  delay(1000);
-  runY(modeDirY, speedRPS, stepsInFullRound * rounds);
-  delay(1000); 
-}
-
-// Releases piece to new place
 void zAxisRelease(){
 
   Serial.println("going down");
-  for(pos = 60; pos < 300; pos +=1)  // goes from 0 degrees to 180 degrees 
+  for(pos = 10; pos < 85; pos +=1)  // goes from 0 degrees to 180 degrees 
     {                                  // in steps of 1 degree 
-      myservo.write(pos);              // tell servo to go to position in variable 'pos' 
-      delay(15);                       // waits 15ms for the servo to reach the position 
+      servo1.write(pos);              // tell servo to go to position in variable 'pos' 
+      delay(50);                       // waits 15ms for the servo to reach the position 
     } 
+    
        M3->setSpeed(40);
        M3->run(BACKWARD);
        delay(200);
@@ -142,34 +106,90 @@ void zAxisRelease(){
        M3->run(FORWARD);
     delay(2000);
   Serial.println("going up");
-  for(pos = 300; pos> 60; pos-=1)
+  for(pos = 85; pos> 10; pos-=1)
        // goes from 180 degrees to 0 degrees 
     {                                
-      myservo.write(pos);              // tell servo to go to position in variable 'pos' 
-      delay(15);                       // waits 15ms for the servo to reach the position 
+      servo1.write(pos);              // tell servo to go to position in variable 'pos' 
+      delay(50);                       // waits 15ms for the servo to reach the position 
     }    
+      M3->setSpeed(50);
+      M3->run(BACKWARD);
+      delay(1000);
+      M3->setSpeed(0);
+      M3->run(FORWARD);
+       
   delay(2000);
 }
 
-// Runs the motors to the the start position
-void runToStart(double speedRPS, int rounds) {
-  // Moves back to the start
-  runX(false, speedRPS, stepsInFullRound * rounds);
-  delay(1000);
-  runY(false, speedRPS, stepsInFullRound * rounds);
-  delay(1000);
+void goToOrigin(){
+  
+  while(digitalRead(ledXGreen)){
+    M1->step(100, BACKWARD, DOUBLE);  
+  }
+  M1->release();
+  while(digitalRead(ledYGreen)){
+    M2->step(100, BACKWARD, DOUBLE);
+  }
+  M2->release();
 }
 
-// Tests various speeds for 10 full rotations
 void loop(){
+  while(Serial.available()){
+//    Serial.println("serial is open");
+    char inChar = (char)Serial.read();
+    inputString += inChar;
+    delay(3);
+  }
+  if (inputString.length()>0){
 
-  runToPlace(1,10);
-  zAxisPickUp();
-  runToNewPlace(1, 10, true, true);
-  zAxisRelease();
-  runToStart(1,10);
+    x1 = inputString.substring(1,2);
+    y1 = inputString.substring(3,4);
+    x2 = inputString.substring(5,6);
+    y2 = inputString.substring(7,8);
+    
+    int x1val = x1.toInt();
+    int y1val = y1.toInt();
+    int x2val = x2.toInt();
+    int y2val = y2.toInt();
+    
+    Serial.println("go to origin");    
+    
+    goToOrigin();
+    
+    Serial.println("moving");
+    
+    runXY(x1val-1, y1val-1, true, true);
+    Serial.println("picking up");
+    zAxisPickUp();
+    
+    boolean pickX;
+    boolean pickY;
+    
+    if(x2val - x1val > 0){
+      pickX = true; 
+    }else{
+      pickX = false; 
+    }
+    
+    if(y2val - y1val > 0){
+      pickY = true; 
+    }else{
+      pickY = false; 
+    }
+    
+    x2val = abs(x2val - x1val);
+    y2val = abs(y2val - y1val);
+    
+    Serial.println("second moving ");
+    runXY(x2val, y2val, pickX, pickY);
 
-  // runBackAndForth(1, 10);
-  // runBackAndForth(5, 10);
-  // runBackAndForth(7, 10);
+    Serial.println("putting down");
+    zAxisRelease();
+  
+    inputString = "";
+    Serial.println("finished move");
+  
+  }
+
+
 }
