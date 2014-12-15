@@ -7,21 +7,21 @@ import random
 #import tictactoe
 import serial
 
-
-STEPS_PER_INCH = 3200
+#Global Variables 
+# STEPS_PER_INCH = 3200
 PIECE = 100
 KING = 300
 EDGE = 10
 
-def send_tuple(tup):
-    print "Sending Tuple"
-    x = tup[0]
-    y = tup[1]
-    with serial.Serial('/dev/tty.usbmodemfa131',9600) as ser:
-        if ser.isOpen():
-                ser.write('X'+str(x)+'Y'+str(y))
-                print "Serial is Open"
-    print "Done Sending"
+# def send_tuple(tup):
+#     print "Sending Tuple"
+#     x = tup[0]
+#     y = tup[1]
+#     with serial.Serial('/dev/tty.usbmodemfa131',9600) as ser:
+#         if ser.isOpen():
+#                 ser.write('X'+str(x)+'Y'+str(y))
+#                 print "Serial is Open"
+#     print "Done Sending"
 # def printBoardttt(brd):
 #   """displays board"""
 #   brdList = []
@@ -33,6 +33,7 @@ def send_tuple(tup):
 #               brdList.append(brd[(i,j)].name)
 
 def utility (board):
+    """Evaluation function for the board"""
     score = 0
     for i in range(1,9):
         for j in range(1,9):
@@ -58,6 +59,7 @@ def utility (board):
 
 
 def grab_pieces(board,player):
+    """finds all of the pieces on the board"""
     pieces = []
     for i in range(1,9):
         for j in range(1,9):
@@ -68,6 +70,7 @@ def grab_pieces(board,player):
 
 
 def min_value(game,board,player,tree,depth):
+    """Minimizes the Max value"""
     d = {}
     scores = []
     brd_lst = printBoard(board)
@@ -94,6 +97,7 @@ def min_value(game,board,player,tree,depth):
     return value
 
 def max_value(game,board,player,tree,depth):
+    """Maximizes the minimum vlaue"""
     d = {}
     scores = []
     brd_lst = printBoard(board)
@@ -120,6 +124,7 @@ def max_value(game,board,player,tree,depth):
     return value
 
 def best_move(game,board,player):
+    """Calls the minimax algorithm to determine best move"""
     new_game = Checkers()
     board_buf = board
     new_game.board = board_buf
@@ -142,7 +147,7 @@ def best_move(game,board,player):
         key = min(m)
         move = m[key] 
     print move
-    return board,move
+    return move
 
 def printBoard(brd):
     """displays board"""
@@ -178,6 +183,7 @@ def done(game, brd, player):
         return False
 
 def hasWin(game,brd,player):
+    """Check if player has win"""
     if game.hasWin(brd, player):
         return True
     else:
@@ -196,6 +202,7 @@ def validateMove(game, brd, move):
     return True
 
 def readPlayerInput_test(game, brd, player):
+    """keyboard input for human player"""
     move = []
     while True:
         print "You are " + player
@@ -223,12 +230,20 @@ def readPlayerInput_test(game, brd, player):
     return
 def humanMove(game, brd, player):
     #needs a little work
-    d = brd
-    while d == brd:
+    brd_list = printBoard(brd)
+    d_list = brd_list
+    while d_list == brd_list:
         d = getState(brd)
+        if d != None:
+            d_list = printBoard(d)
     return d, None
 def computerMove(game, brd, player):
-    return best_move(game,brd,player)
+    move =  best_move(game,brd,player)
+    piece = move[0]
+    x1,y1 = piece.position()
+    x2 = move[1]
+    y2 = move[2]
+    return brd, move
 
 def makeMove(game, brd, move):
     """Makes a legal move based on current game rules"""
@@ -261,9 +276,10 @@ def getState(board):
     dic1, dic2 = picam_main()
     d= createBoard(dic1, dic2)
     d2 = compareBoard(board,d)
-    return d2
+    return d
 
 def createBoard(camBrd, colorBrd):
+    """Uses Cam data to create Board"""
     d = {}
     for keys in cam.keys():
         if keys in colorBrd:
@@ -292,14 +308,14 @@ def compareBoard(brd, finalCamBoard):
 
     return d
 
-def determineGame(strn):
-    if strn.lower() == "chess":
-        game = Chess()
-    elif strn.lower() == "checkers":
-        game = Checkers()
-    else:
-        game = tictactoe()
-    return game
+# def determineGame(strn):
+#     if strn.lower() == "chess":
+#         game = Chess()
+#     elif strn.lower() == "checkers":
+#         game = Checkers()
+#     else:
+#         game = tictactoe()
+#     return game
 
 
 def createBoard(game):
@@ -308,7 +324,8 @@ def createBoard(game):
     
 
 def run(strn,curPlayer,playW, playB):
-    game = determineGame('checkers')
+    """Gameplay Loop"""
+    game = Checkers()
     brd = createBoard(game)
     boardView = printBoard(brd)
     previousBrdView = boardView
@@ -333,6 +350,7 @@ def run(strn,curPlayer,playW, playB):
 def main():
     inpt = raw_input("test, Current player(w or b) ")
     usrInput = inpt.split()
+    # OLD VERSION
     # if len(usrInput) == 4:
     #   if usrInput[2].upper() == "COMPUTER":
     #       playW = computerMove
