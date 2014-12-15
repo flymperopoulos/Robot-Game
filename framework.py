@@ -229,6 +229,7 @@ def humanMove(game, brd, player):
     d_list = brd_list
     while d_list == brd_list:
         d = get_State(brd)
+        print "checking board"
         if d != None:
             d_list = printBoard(d)
         time.sleep(2)
@@ -278,6 +279,7 @@ def get_State(board):
     dic1, dic2 = out
     d= createBoard(dic1, dic2)
     d2 = compareBoard(board,d)
+    print d2
     return d2
 
 def createBoard(camBrd, colorBrd):
