@@ -308,21 +308,32 @@ def compareBoard(brd, finalCamBoard):
     for i in range(1,9):
         for j in range(1,9):
              d[(i,j)] = 0
-    for pieces in brd.values():
-        for camPieces in finalCamBoard.values():
+    w_nums = range(0,12)
+    b_nums = range(0,12)
+    for camPieces in finalCamBoard.values():
             # adding the "W" (human) pieces. There are only going to be one piece that changed position
             # print pieces.color, pieces.position, pieces.name
-            if pieces != 0:
-                if pieces.color == "W" and camPieces.color == "W" and pieces._position == camPieces._position:
-                # print "first if", pieces.color, pieces.position, pieces.name
-                    d[pieces._position] = CheckerPiece("W", pieces._position, pieces.name[1])
-                elif pieces.color == "W" and camPieces.color == "W":
-                # print "else", pieces.color, pieces.position, pieces.name
-                    d[camPieces._position] = CheckerPiece("W", camPieces._position, pieces.name[1])
-            # adding the "B" (computer) pieces. In checkers only thing that can happen is pieces being taken away
-                if pieces.color == "B" and camPieces.color == "B" and pieces._position == camPieces._position:
-                    print "adding black pieces"
-                    d[pieces._position] = CheckerPiece("B", pieces._position, pieces.name[1])
+            # if pieces != 0:
+            #     if pieces.color == "W" and camPieces.color == "W" and pieces._position == camPieces._position:
+            #     # print "first if", pieces.color, pieces.position, pieces.name
+            #         d[pieces._position] = CheckerPiece("W", pieces._position, pieces.name[1])
+            #     elif pieces.color == "W" and camPieces.color == "W":
+            #     # print "else", pieces.color, pieces.position, pieces.name
+            #         d[camPieces._position] = CheckerPiece("W", camPieces._position, pieces.name[1])
+            # # adding the "B" (computer) pieces. In checkers only thing that can happen is pieces being taken away
+            #     if pieces.color == "B" and camPieces.color == "B" and pieces._position == camPieces._position:
+            #         print "adding black pieces"
+            #         d[pieces._position] = CheckerPiece("B", pieces._position, pieces.name[1])
+            if brd[camPieces._position] != 0:
+                d[camPieces._position] = CheckerPiece(brd[camPieces._position].color,
+                                            camPieces._position, brd[camPieces._position].number)
+                if brd[camPieces._position].color == 'W':
+                    w_nums.remove(brd[camPieces._position].number)
+                else:
+                    b_nums.remove(brd[camPieces._position].number)
+            else:
+                d[camPieces._position] = CheckerPiece(camPieces.color,
+                                            camPieces._position, random.randint(12,99))
 
     return d
 
