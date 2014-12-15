@@ -367,7 +367,7 @@ def run(strn,curPlayer,playW, playB):
         d2 = get_State(brd)
         state_view = printBoard(d2)
         while state_view != boardView:
-            time.sleep(2)
+            time.sleep(10)
             d2 = get_State(brd)
             if d2 != None:
                 state_view = printBoard(d2)

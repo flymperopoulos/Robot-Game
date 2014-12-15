@@ -160,28 +160,31 @@ def picam_main(brd):
 	"""
 		Main method that runs everything
 	"""
-	getState()
-	#img = getImage('/home/pi/Robot-Game/res/boardState.jpg')
-	img = getImage('/home/pi/Robot-Game/res/boardStateTest.jpg')
-	brdCountour = getContour(img)
-	# clrCountour = getColor(img)
-	brdList, centerX, centerY, cornerX, cornerY = getBoardList(brdCountour)
-	clrList = getTriangleList(brdCountour)
+	try:
+		getState()
+		#img = getImage('/home/pi/Robot-Game/res/boardState.jpg')
+		img = getImage('/home/pi/Robot-Game/res/boardStateTest.jpg')
+		brdCountour = getContour(img)
+		# clrCountour = getColor(img)
+		brdList, centerX, centerY, cornerX, cornerY = getBoardList(brdCountour)
+		clrList = getTriangleList(brdCountour)
 
-	brdDict = imageToBoard(brdList, centerX, centerY, cornerX, cornerY)
-	clrDict = imageToBoardColor(brdDict, clrList ,centerX, centerY, cornerX, cornerY)
+		brdDict = imageToBoard(brdList, centerX, centerY, cornerX, cornerY)
+		clrDict = imageToBoardColor(brdDict, clrList ,centerX, centerY, cornerX, cornerY)
 
-	print brdList
-	print clrList
-	print brdDict, len(brdDict)
-	print clrDict, len(clrDict)
-	w_pieces = grab_pieces(brd,'W')
-	b_pieces = grab_pieces(brd,'B')
-	if len(clrDict) == len(w_pieces):
-		pn = len(w_pieces) + len(b_pieces)
-		if  pn == len(brdDict):
-			return brdDict, clrDict
-	else:
+		print brdList
+		print clrList
+		print brdDict, len(brdDict)
+		print clrDict, len(clrDict)
+		w_pieces = grab_pieces(brd,'W')
+		b_pieces = grab_pieces(brd,'B')
+		if len(clrDict) == len(w_pieces):
+			pn = len(w_pieces) + len(b_pieces)
+			if  pn == len(brdDict):
+				return brdDict, clrDict
+		else:
+			return None
+	except:
 		return None
 
 def pic():
