@@ -142,7 +142,7 @@ ytemp =0
 for p in pieces:
 	xtemp = (p[0]-cornerX)/gridW +1
 	ytemp = (p[1]-cornerY)/gridH +1
-	if xtemp < 7 and ytemp < 7  and xtemp >0  and ytemp > 0:
+	if xtemp < 9 and ytemp < 9  and xtemp >0  and ytemp > 0:
 		d[xtemp, ytemp] = 1
 print d, len(d)
 

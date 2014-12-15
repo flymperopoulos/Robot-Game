@@ -3,7 +3,7 @@ import cv2
 
 def createBoard(camBrd, colorBrd):
 	d = {}
-	for keys in cam.keys():
+	for keys in camBrd.keys():
 		if keys in colorBrd:
 			d[keys] = CheckerPiece("W", keys, "0")
 		else:
@@ -36,10 +36,20 @@ dic = {(1,1):CheckerPiece("W", (1,1), "1"), (5,4):CheckerPiece("W", (5,4), "2"),
 dic2 = {(1,1):CheckerPiece("W", (1,1) , "0"), (2,1):CheckerPiece("W", (2,1), "0"), (1,4):CheckerPiece("W", (1,4), "0"),
 (2,2):CheckerPiece("B", (2,2), "0"), (3,5):CheckerPiece("B", (3,5), "0")}
 
+b = {(2, 7): 1, (5, 4): 1, (6, 7): 1, (4, 5): 1, (4, 1): 1, (5, 2): 1, (4, 7): 1, (6, 3): 1, (3, 2): 1, (3, 6): 1, (8, 5): 1, (7, 2): 1}
+tri = {(5, 4): 'R', (5, 2): 'R', (3, 2): 'R', (6, 3): 'R', (4, 1): 'R', (7, 2): 'R'}
+board = createBoard(b, tri)
+# print board
+
+
 d = compareBoard(dic, dic2)
 
 for key, value in d.iteritems():
 	print key,value.color, value.position, value.name
+
+
+# for key, value in board.iteritems():
+# 	print key,value.color, value.position, value.name
 
 # cam = cv2.VideoCapture(0)
 # while(True):
