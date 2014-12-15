@@ -3,13 +3,11 @@ from checkers import *
 import sys
 from picameracode import *
 import random
-# from minmax import *
-#import tictactoe
 import serial
 import cv2
 import time
+
 #Global Variables 
-# STEPS_PER_INCH = 3200
 PIECE = 100
 KING = 300
 EDGE = 10
@@ -237,6 +235,7 @@ def readPlayerInput_test(game, brd, player):
         
     return
 def humanMove(game, brd, player):
+    """checks for humans move and update the board"""
     #needs a little work
     brd_list = printBoard(brd)
     d_list = brd_list
@@ -318,6 +317,7 @@ def createBoard(camBrd, colorBrd):
 
 
 def compareBoard(brd, finalCamBoard):
+    """compares the game board from the game framework and the camera game board"""
     d = {}
     for i in range(1,9):
         for j in range(1,9):
@@ -344,16 +344,6 @@ def compareBoard(brd, finalCamBoard):
                                             camPieces._position, str(random.randint(0,99)))
 
     return d
-
-# def determineGame(strn):
-#     if strn.lower() == "chess":
-#         game = Chess()
-#     elif strn.lower() == "checkers":
-#         game = Checkers()
-#     else:
-#         game = tictactoe()
-#     return game
-
 
 def createInitialBoard(game):
     """initializes board"""

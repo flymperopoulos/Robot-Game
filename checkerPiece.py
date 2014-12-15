@@ -16,6 +16,9 @@ class CheckerPiece(object):
 		return self.position
 
 	def possibleMoves(self, brd):
+		"""
+			finds the all of the possible moves and the kingMove for a given piece
+		"""
 		moves = []
 		kingMoves = []
 		if self.color == "B":

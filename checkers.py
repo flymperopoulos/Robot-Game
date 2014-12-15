@@ -63,12 +63,6 @@ class Checkers(object):
         return False
 
     def move(self, piece, x, y, jumps):
-        # sameMove = False
-        # while not sameMove:
-        # moves = piece.validateMoves()
-        # def getKey(item):
-        #     return item[0]
-        # sort_moves=sorted(moves, key=getKey, reverse=True)
         pos = piece.position()
         piece._position = (x,y)
         self.board[pos] = 0
