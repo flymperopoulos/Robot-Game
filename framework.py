@@ -5,7 +5,23 @@ import sys
 import random
 # from minmax import *
 #import tictactoe
+import serial
 
+
+STEPS_PER_INCH = 3200
+PIECE = 100
+KING = 300
+EDGE = 10
+
+def send_tuple(tup):
+    print "Sending Tuple"
+    x = tup[0]
+    y = tup[1]
+    with serial.Serial('/dev/tty.usbmodemfa131',9600) as ser:
+        if ser.isOpen():
+                ser.write('X'+str(x)+'Y'+str(y))
+                print "Serial is Open"
+    print "Done Sending"
 # def printBoardttt(brd):
 #   """displays board"""
 #   brdList = []
@@ -15,26 +31,28 @@ import random
 #               brdList.append(' ')
 #           else:
 #               brdList.append(brd[(i,j)].name)
+
 def utility (board):
     score = 0
     for i in range(1,9):
         for j in range(1,9):
-            if board[(i,j)].color == white:
-                score += PIECE
-                if board[(i,j)].isKing:
-                    score += KING
-                if i == 1 or i == 8:
-                    score += EDGE 
-                if j == 1 or j == 8:
-                    score -= EDGE
-            elif board[(i,j)].color == black:
-                score -= PIECE
-                if board[(i,j)].isKing:
-                    score -= KING
-                if i == 1 or i == 8: 
-                    score-= EDGE
-                if j == 1 or j == 8:
-                    score -= EDGE
+            if board[(i,j)] != 0:
+                if board[(i,j)].color == 'white':
+                    score -= PIECE
+                    if board[(i,j)].isKing:
+                        score -= KING
+                        if i == 1 or i == 8:
+                            score -= EDGE 
+                    if j == 1 or j == 8:
+                        score -= EDGE
+                elif board[(i,j)].color == 'black':
+                    score += PIECE
+                    if board[(i,j)].isKing:
+                        score += KING
+                        if i == 1 or i == 8: 
+                            score+= EDGE
+                    if j == 1 or j == 8:
+                        score += EDGE
     score += random.randint(0,10)
     return score
 
@@ -49,58 +67,82 @@ def grab_pieces(board,player):
 
 
 
-def min_value (game, board,value,move,player):
-    # fix me 
-    d_moves = {}
-    if done(game,board,player) != False:
-        value[-1] = utility(board)
-        # value.append(0)
-        return value
-    pieces = grab_pieces(board,player)
-    for piece in pieces:
-        moves = piece.validateMoves(board)
-        d_moves[piece] = moves
-    for key in d_moves:
-        for i in d_moves[key]:
-            move = [key, i[0], i[1]]
-            new_board = makeMove(game, board, move)#fix this
-            # print_board(board)
-            player = otherPlayer(player)
-            value[-1] = min(value[-1],max_value(game, new_board,value,move,player))
-            print 'Final'
-            print value,move
-            
-    return value, move
+def min_value(game,board,player,tree,depth):
+    d = {}
+    scores = []
+    brd_lst = printBoard(board)
+    brd_str = ''
+    depth += 1
+    for i in brd_lst:
+        brd_str += i
+    if depth > 10:
+        return utility(board)
+    if done(game,board,player):
+        return utility(board)
+    for piece in grab_pieces(board,player):
+        moves,jumps = piece.validateMoves(board)
+        for move in moves:
+            if brd_str in tree:
+                v = tree[brd_str]
+            else:  
+                m = [piece,move[0],move[1]]
+                new_board = makeMove(game,board,m)
+                v = max_value(game,new_board,otherPlayer(player),tree, depth)
+                tree[brd_str] = v
+            scores.append(v)
+    value = min(scores)
+    return value
 
-def max_value (game, board,value,move,player):
-    d_moves = {}
-    if done(game,board,player) != False:
-        value[-1] = utility(board)
-        # value.append(0)
-        return value
-    pieces = grab_pieces(board,player)
-    for piece in pieces:
-        moves = piece.validateMoves(board)
-        d_moves[piece] = moves
-    for key in d_moves:
-        for i in d_moves[key]:
-            move = [key, i[0], i[1]]
-            new_board = makeMove(game, board, move)# fix this
-            # print_board(board)
-            player = otherPlayer(player)
-            value[-1] = max(value[-1],min_value(game, new_board,value,move,player))
-            print 'Final'
-            print value
-    return value, move
+def max_value(game,board,player,tree,depth):
+    d = {}
+    scores = []
+    brd_lst = printBoard(board)
+    brd_str = ''
+    depth += 1
+    for i in brd_lst:
+        brd_str += i
+    if depth>10:
+        return utility(board)
+    if done(game,board,player):
+        return utility(board)
+    for piece in grab_pieces(board,player):
+        moves,jumps = piece.validateMoves(board)
+        for move in moves:
+            if brd_str in tree:
+                v = tree[brd_str]
+            else:  
+                m = [piece,move[0],move[1]]
+                new_board = makeMove(game,board,m)
+                v = min_value(game,new_board,otherPlayer(player),tree, depth)
+                tree[brd_str] = v
+            scores.append(v)
+    value = max(scores)
+    return value
 
-
-def best_move (game, board,player):
-    # fix me
-    move = [0]
-    value = [0]
-    v,move = min_value(game, board,value,move,player)
+def best_move(game,board,player):
+    new_game = Checkers()
+    board_buf = board
+    new_game.board = board_buf
+    print board_buf
+    tree = {}
+    m = {}
+    for piece in grab_pieces(board_buf,player):
+        depth = 0
+        moves,jumps = piece.validateMoves(board_buf)
+        for move in moves:
+            if player.upper() == 'W':
+                value = min_value(new_game,board_buf,player,tree, depth)
+            else:
+                value = max_value(new_game,board_buf,player,tree, depth)
+            m[value] = [piece,move[0],move[1]]
+    if player.upper() == 'W':
+        key = max(m)
+        move = m[key]
+    else:
+        key = min(m)
+        move = m[key] 
     print move
-    return board, move
+    return board,move
 
 def printBoard(brd):
     """displays board"""
@@ -190,8 +232,12 @@ def computerMove(game, brd, player):
 
 def makeMove(game, brd, move):
     """Makes a legal move based on current game rules"""
+    # new_brd = dict(brd)
+    new_game = Checkers()
+    # new_game.board = new_brd
+    new_brd = new_game.make_buf(brd)
     if move == None:
-        return brd
+        return new_brd
     else: 
         piece = move[0]
         x = move[1]
@@ -202,13 +248,13 @@ def makeMove(game, brd, move):
         print brd[(x,y)]
         print x
         print y
-        if (x,y) in piece.validateMoves(brd): 
-            brd = game.move(piece,x,y)  
-
-            return brd
+        ms, js = piece.validateMoves(new_brd)
+        if (x,y) in ms: 
+            new_brd = new_game.move(piece,x,y,js)  
+            return new_brd
         else: 
             print 'invalid move'
-            return brd  
+            return new_brd  
 
 def getState(board):
     """detects how the board looks"""

@@ -3,9 +3,45 @@ from checkers import *
 import sys
 # from picameracode import *
 import random
+import time
 # from minmax import *
 #import tictactoe
+import serial
+PIECE = 100
+KING = 300
+EDGE = 10
+STEPS_PER_INCH = 3200
 
+def motor_control(brd,move):
+    piece = move[0]
+    x = move[1]
+    y = move[2]
+    x1, y1 = piece._position
+    brd_view =  printBoard(brd)
+    d2_view = []
+    while d2_view != brd_view: #This doesn't work how i want it to. 
+        send_tuple((x1,y1))
+        send_tuple((x,y))
+        time.sleep(1)
+        d2 = getState(board)
+        if d2 != None: 
+            d2_view = printBoard(d2)
+            for key in d2:
+                if d2[key] == piece:
+                    x1,y1 = piece._position
+
+
+
+
+def send_tuple(tup):
+    print "Sending Tuple"
+    x = tup[0]
+    y = tup[1]
+    with serial.Serial('/dev/tty.usbmodemfa131',9600) as ser:
+        if ser.isOpen():
+                ser.write('X'+str(x)+'Y'+str(y))
+                print "Serial is Open"
+    print "Done Sending"
 # def printBoardttt(brd):
 #   """displays board"""
 #   brdList = []
@@ -22,17 +58,17 @@ def utility (board):
             if board[(i,j)].color == white:
                 score += PIECE
                 if board[(i,j)].isKing:
-                    score += KING
-                if i == 1 or i == 8:
-                    score += EDGE 
+                    score -= KING
+                    if i == 1 or i == 8:
+                        score -= EDGE 
                 if j == 1 or j == 8:
                     score -= EDGE
             elif board[(i,j)].color == black:
                 score -= PIECE
                 if board[(i,j)].isKing:
                     score -= KING
-                if i == 1 or i == 8: 
-                    score-= EDGE
+                    if i == 1 or i == 8: 
+                        score-= EDGE
                 if j == 1 or j == 8:
                     score -= EDGE
     score += random.randint(0,10)
@@ -222,15 +258,19 @@ def getState(board):
     dic1, dic2 = picam_main()
     d= createBoard(dic1, dic2)
     d2 = compareBoard(board,d)
-    return d2
+    return d
 
 def createBoard(camBrd, colorBrd):
     d = {}
-    for keys in cam.keys():
+    counter_w = 0
+    counter_b = 0
+    for keys in camBrd.keys():
         if keys in colorBrd:
-            d[keys] = CheckerPiece("W", keys, "0")
+            d[keys] = CheckerPiece("W", keys, str(counter_w))
+            counter_w += 1
         else:
-            d[keys] = CheckerPiece("B", keys, "0")
+            d[keys] = CheckerPiece("B", keys, str(counter_b))
+            counter_b += 1
     return d
 
 
@@ -281,6 +321,7 @@ def run(strn,curPlayer,playW, playB):
         else:
             brd,move = playB(game, brd, player)
         brd = makeMove(game,brd,move)
+        motor_control(brd,move)
         boardView = printBoard(brd)
         if boardView!=previousBrdView:
             previousBrdView = boardView

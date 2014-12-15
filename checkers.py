@@ -6,7 +6,20 @@ class Checkers(object):
     """
     def __init__(self):
         self.board = {}
+        self.DIR =  {'ul':(-1,-1),
+                'ur':(1,-1),
+                'dl':(-1,1),
+                'dr':(1,1)}
     
+    def make_buf(self,brd):
+        new_brd = dict(brd)
+        for key in brd:
+            if brd[key]!=0:
+                new_brd[key] = CheckerPiece(brd[key].color,key,brd[key].number)
+            else: 
+                new_brd[key] = 0
+        self.board = new_brd
+        return new_brd
     def initialBoard(self):
         b = 0
         w = 0
@@ -49,30 +62,27 @@ class Checkers(object):
     def end(self):
         return False
 
-    def move(self, piece, x, y):
+    def move(self, piece, x, y, jumps):
         # sameMove = False
         # while not sameMove:
+        # moves = piece.validateMoves()
+        # def getKey(item):
+        #     return item[0]
+        # sort_moves=sorted(moves, key=getKey, reverse=True)
         pos = piece.position()
         piece._position = (x,y)
         self.board[pos] = 0
         self.board[(x,y)] = piece
-        piece_taken = 0
-        if pos[1] - y == 2:
-            if pos[0] - x == 2:
-                piece_taken = self.board[(x+1,y+1)]
-                self.board[(x+1,y+1)] = 0
-            else:
-                piece_taken = self.board[(x-1,y+1)]
-                self.board[(x-1,y+1)] = 0
-        elif pos[1] - y == -2:
-            if pos[0] -x == 2:
-                piece_taken = self.board[(x+1,y-1)]
-                self.board[(x+1,y-1)] = 0
-            else:
-                piece_taken = self.board[(x-1,y-1)]
-                self.board[(x-1,y-1)] = 0
-        if piece_taken != 0:
-            piece_taken._position = 0 
-            # moves2 = piece.validateMoves()
+        if piece.color == 'B':
+            if x == 8:
+                piece._isKing = True
+        else:
+            if x == 1:
+                piece._isKing = True
+        if abs(pos[0]-x) != 1:
+            if jumps != []:
+                for tup in jumps:
+                    self.board[tup] = 0
                 
         return self.board
+
