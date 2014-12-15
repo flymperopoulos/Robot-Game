@@ -333,7 +333,7 @@ def compareBoard(brd, finalCamBoard):
                     b_nums.remove(brd[camPieces._position].number)
             else:
                 d[camPieces._position] = CheckerPiece(camPieces.color,
-                                            camPieces._position, random.randint(12,99))
+                                            camPieces._position, str(random.randint(12,99)))
 
     return d
 
@@ -366,6 +366,12 @@ def run(strn,curPlayer,playW, playB):
         else:
             brd,move = playB(game, brd, player)
         brd = makeMove(game,brd,move)
+        d2 = get_State(brd)
+        state_view = printBoard(d2)
+        while state_view != brd:
+            time.sleep(2)
+            d2 = get_State(brd)
+            state_view = printBoard(d2)
         boardView = printBoard(brd)
         if boardView!=previousBrdView:
             previousBrdView = boardView
