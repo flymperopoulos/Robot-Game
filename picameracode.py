@@ -16,16 +16,16 @@ def getImage(filename):
 	"""
 		returns the img
 	"""
-	return cv2.imread(filename, 0)
+	return cv2.imread(filename)
 
 def getContour(img):
 	"""
 		returns the contour of the board
 	"""
 
-	#imgray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-	edges = cv2.Canny(img,100,200)
-	ret,thresh = cv2.threshold(img,127,255,cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+	imgray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+	edges = cv2.Canny(imgray,100,200)
+	ret,thresh = cv2.threshold(imgray,127,255,cv2.THRESH_BINARY | cv2.THRESH_OTSU)
 	contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
 	return contours
 
@@ -158,7 +158,7 @@ def picam_main():
 	"""
 	getState()
 	#img = getImage('/home/pi/Robot-Game/res/boardState.jpg')
-	img = getImage('/home/pi/Robot-Game/res/boardStateNew.png')
+	img = getImage('/home/pi/Robot-Game/res/boardStateNew.jpg')
 	brdCountour = getContour(img)
 	# clrCountour = getColor(img)
 	brdList, centerX, centerY, cornerX, cornerY = getBoardList(brdCountour)
