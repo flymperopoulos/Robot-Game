@@ -333,7 +333,7 @@ def compareBoard(brd, finalCamBoard):
                     b_nums.remove(brd[camPieces._position].number)
             else:
                 d[camPieces._position] = CheckerPiece(camPieces.color,
-                                            camPieces._position, random.randint(12,99))
+                                            camPieces._position, str(random.randint(12,99)))
 
     return d
 
