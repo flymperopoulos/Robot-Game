@@ -24,6 +24,7 @@ def send_tuple(tup,tup2):
         if ser.isOpen():
                 ser.write('X'+str(x)+'Y'+str(y)+'X'+ str(x2)+'Y'+str(y2))
                 print "Serial is Open"
+                print 'X'+str(x)+'Y'+str(y)+'X'+ str(x2)+'Y'+str(y2)
     print "Done Sending"
 
 
