@@ -52,7 +52,7 @@ void setup() {
 void runXY(int xVal, int yVal, boolean xMovement, boolean yMovement){
 
   if (xMovement){
-    M1->step(4700*xVal, FORWARD, DOUBLE);
+    M1->step(4110*xVal, FORWARD, DOUBLE);
   } else {
     M1->step(4700*xVal, BACKWARD, DOUBLE);
   }
@@ -60,9 +60,9 @@ void runXY(int xVal, int yVal, boolean xMovement, boolean yMovement){
   M1->release();
   
   if (yMovement){
-    M2->step(4400*yVal, FORWARD, DOUBLE);
+    M2->step(3850*yVal, FORWARD, DOUBLE);
   } else {
-    M2->step(4400*yVal, BACKWARD, DOUBLE);
+    M2->step(3850*yVal, BACKWARD, DOUBLE);
   }
 
   M2->release();
@@ -155,6 +155,8 @@ void loop(){
     Serial.println("go to origin");    
     
     goToOrigin();
+    Serial.println("moving to 1, 1");
+    runXY(1, .1, true, true);
     
     Serial.println("moving");
     
@@ -188,6 +190,11 @@ void loop(){
   
     inputString = "";
     Serial.println("finished move");
+    
+    Serial.println("go to origin");    
+    
+    goToOrigin();
+
   
   }
 

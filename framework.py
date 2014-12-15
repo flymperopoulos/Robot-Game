@@ -7,38 +7,20 @@ import random
 #import tictactoe
 import serial
 import cv2
-
+import time
 #Global Variables 
 # STEPS_PER_INCH = 3200
 PIECE = 100
 KING = 300
 EDGE = 10
 
-# def send_tuple(tup):
-#     print "Sending Tuple"
-#     x = tup[0]
-#     y = tup[1]
-#     with serial.Serial('/dev/tty.usbmodemfa131',9600) as ser:
-#         if ser.isOpen():
-#                 ser.write('X'+str(x)+'Y'+str(y))
-#                 print "Serial is Open"
-#     print "Done Sending"
-# def printBoardttt(brd):
-#   """displays board"""
-#   brdList = []
-#   for i in range(1,4):
-#       for j in range(1,4):
-#           if brd[(i,j)] == 0:
-#               brdList.append(' ')
-#           else:
-#               brdList.append(brd[(i,j)].name)
 def send_tuple(tup,tup2):
     print "Sending Tuple"
     x = tup[0]
     y = tup[1]
     x2 = tup2[0]
     y2 = tup2[1]
-    with serial.Serial('/dev/tty.usbmodemfa131',9600) as ser:
+    with serial.Serial('/dev/ttyACM0',9600) as ser:
         if ser.isOpen():
                 ser.write('X'+str(x)+'Y'+str(y)+'X'+ str(x2)+'Y'+str(y2))
                 print "Serial is Open"
@@ -246,10 +228,12 @@ def humanMove(game, brd, player):
     brd_list = printBoard(brd)
     d_list = brd_list
     while d_list == brd_list:
-        d = getState(brd)
+        d = get_State(brd)
         if d != None:
             d_list = printBoard(d)
+        time.sleep(2)
     return d, None
+
 def computerMove(game, brd, player):
     move =  best_move(game,brd,player)
     piece = move[0]
@@ -285,17 +269,17 @@ def makeMove(game, brd, move):
             print 'invalid move'
             return new_brd  
 
-def getState(board):
+def get_State(board):
     """detects how the board looks"""
     dic1, dic2 = picam_main()
     d= createBoard(dic1, dic2)
     d2 = compareBoard(board,d)
-    return d
+    return d2
 
 def createBoard(camBrd, colorBrd):
     """Uses Cam data to create Board"""
     d = {}
-    for keys in cam.keys():
+    for keys in camBrd.keys():
         if keys in colorBrd:
             d[keys] = CheckerPiece("W", keys, "0")
         else:

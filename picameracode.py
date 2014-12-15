@@ -147,7 +147,16 @@ def imageToBoardColor(brdDict, clrList, centerX, centerY, cornerX, cornerY):
 			clrDict[xtemp, ytemp] = "R"
 	return clrDict
 
-def picam_main():
+def grab_pieces(board,player):
+    """finds all of the pieces on the board"""
+    pieces = []
+    for i in range(1,9):
+        for j in range(1,9):
+            if board[(i,j)] != 0 and board[(i,j)].color == player:
+                pieces.append(board[(i,j)])
+    return pieces
+
+def picam_main(brd):
 	"""
 		Main method that runs everything
 	"""
@@ -166,7 +175,13 @@ def picam_main():
 	print clrList
 	print brdDict, len(brdDict)
 	print clrDict, len(clrDict)
-	return brdDict, clrDict
+	w_pieces = grab_pieces(brd,'W')
+	b_pieces = grab_pieces(brd,'B')
+	if len(clrDict) == len(w_pieces):
+		if len(w_pieces) + len(b_pieces) == len(brdDict)
+		return brdDict, clrDict
+	else:
+		return None
 
 def pic():
 	getState()
