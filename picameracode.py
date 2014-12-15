@@ -9,7 +9,7 @@ def getState():
 	"""
 	camera = picamera.PiCamera()
 	time.sleep(1)
-	camera.capture('/home/pi/Robot-Game/res/boardStateNew.jpg')
+	camera.capture('/home/pi/Robot-Game/res/boardStateTest.jpg')
 	camera.close()
 
 def getImage(filename):
@@ -162,7 +162,7 @@ def picam_main(brd):
 	"""
 	getState()
 	#img = getImage('/home/pi/Robot-Game/res/boardState.jpg')
-	img = getImage('/home/pi/Robot-Game/res/boardStateNew.jpg')
+	img = getImage('/home/pi/Robot-Game/res/boardStateTest.jpg')
 	brdCountour = getContour(img)
 	# clrCountour = getColor(img)
 	brdList, centerX, centerY, cornerX, cornerY = getBoardList(brdCountour)
