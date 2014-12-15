@@ -296,7 +296,7 @@ def compareBoard(brd, finalCamBoard):
     d = {}
     for i in range(1,9):
         for j in range(1,9):
-	    d[(i,j)] = 0
+             d[(i,j)] = 0
     for pieces in brd.values():
         for camPieces in finalCamBoard.values():
             # adding the "W" (human) pieces. There are only going to be one piece that changed position
