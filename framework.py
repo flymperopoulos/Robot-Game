@@ -277,7 +277,7 @@ def get_State(board):
     out = picam_main(board)
     if out == None:
         print "bull"
-        return None
+        return 0
     dic1, dic2 = out
     d= createBoard(dic1, dic2)
     d2 = compareBoard(board,d)

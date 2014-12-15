@@ -7,8 +7,8 @@ Adafruit_MotorShield AFMSbot(0x61);
 //Adafruit_MotorShield AFMSbot =Adafruit_MotorShield(); 
 Adafruit_MotorShield AFMStop(0x60);
 
-Adafruit_StepperMotor *M1 = AFMSbot.getStepper(200, 2);
-Adafruit_StepperMotor *M2 = AFMSbot.getStepper(200, 1);
+Adafruit_StepperMotor *M2 = AFMSbot.getStepper(200, 2);
+Adafruit_StepperMotor *M1 = AFMSbot.getStepper(200, 1);
 Adafruit_DCMotor *M3 = AFMStop.getMotor(1);
 
 Servo servo1;
@@ -17,8 +17,8 @@ int pos = 0;
 int rpm = 300;
 int boardLength = 0;
 const int servoPin = 9;
-const int ledXGreen = 13;
-const int ledYGreen = 12;
+const int ledXGreen = 12;
+const int ledYGreen = 13;
 
 
 int lengthSwitch = HIGH;
@@ -54,7 +54,7 @@ void runXY(int xVal, int yVal, boolean xMovement, boolean yMovement){
   if (xMovement){
     M1->step(4110*xVal, FORWARD, DOUBLE);
   } else {
-    M1->step(4700*xVal, BACKWARD, DOUBLE);
+    M1->step(*xVal, BACKWARD, DOUBLE);
   }
   
   M1->release();
