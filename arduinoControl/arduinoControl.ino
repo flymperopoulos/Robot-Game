@@ -3,13 +3,13 @@
 #include <Adafruit_MotorShield.h>
 #include "utility/Adafruit_PWMServoDriver.h"
 
-Adafruit_MotorShield AFMSbot(0x60); 
-Adafruit_MotorShield AFMStop(0x61);
+Adafruit_MotorShield AFMSbot= Adafruit_MotorShield(); 
+//Adafruit_MotorShield AFMStop(0x61);
 
 
 Adafruit_StepperMotor *M1 = AFMSbot.getStepper(200, 2);
 Adafruit_StepperMotor *M2 = AFMSbot.getStepper(200, 1);
-Adafruit_DCMotor *M3 = AFMStop.getMotor(1);
+//Adafruit_DCMotor *M3 = AFMSbot.getMotor(1);
 
 Servo servo1;
 
@@ -36,7 +36,7 @@ void setup() {
   
   M1->setSpeed(rpm);
   M2->setSpeed(rpm);
-  M3->setSpeed(100);
+//  M3->setSpeed(100);  
   inputString.reserve(200);
   
 }
@@ -65,12 +65,14 @@ void loop(){
     int yval = y.toInt();
 //         Serial.println(yval);
     Serial.println(xval);
-    M1->step(400*xval, FORWARD, SINGLE);
-    M1->step(0, RELEASE,SINGLE);
-
+    M1->step(400*xval, FORWARD, DOUBLE);
+//    M1->step(0, RELEASE,SINGLE);
+    M1->release();
+    
     Serial.println(yval);
-    M2->step(400*yval, FORWARD, SINGLE);
-    M2->step(0, RELEASE,SINGLE);
+    M2->step(400*yval, FORWARD, DOUBLE);
+//    M2->step(0, RELEASE,SINGLE);
+    M2->release();
 
 
     Serial.println("run");
@@ -85,16 +87,16 @@ void loop(){
     delay(15);                       // waits 15ms for the servo to reach the position 
   } 
   Serial.println("hand");
-    M3->setSpeed(200);
-      M3->run(FORWARD);
+//    M3->setSpeed(200);
+//      M3->run(FORWARD);
   delay(5000);
   for(pos = 100; pos<=160; pos+=1)     // goes from 180 degrees to 0 degrees 
   {                                
       servo1.write(pos);              // tell servo to go to position in variable 'pos' 
       delay(15);                       // waits 15ms for the servo to reach the position 
   } 
-      M3->setSpeed(0);
-      M3->run(FORWARD);
+//      M3->setSpeed(0);
+//      M3->run(FORWARD);
     delay(5000);
     
   }

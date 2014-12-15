@@ -9,7 +9,7 @@ def getState():
 	"""
 	camera = picamera.PiCamera()
 	time.sleep(4)
-	camera.capture('/home/pi/Robot-Game/res/boardState.jpg')
+	camera.capture('/home/pi/Robot-Game/res/boardStateOne.jpg')
 	camera.close()
 
 def getImage(filename):
@@ -60,7 +60,6 @@ def getColorList(contours):
 			x,y = int(m['m10']/m['m00']), int(m['m01']/m['m00'])
 			i= i+1
 			color.append((x,y))
-			# cv2.circle(mask,(x,y),3,(0,255,0),2)
 
 	color = list(set(color))
 
@@ -86,21 +85,14 @@ def getBoardList(contours):
 			big = m['m00']
 			c = cnt
 			mom = m
-			# cv2.circle(imgray,(c[0][0][0],c[0][0][1]),10,(0,255,0),2)
-
 
 		if m['m00'] >10000 and m['m00'] <100000:
 			centerX, centerY = int(m['m10']/m['m00']), int(m['m01']/m['m00'])
-			# print cnt[0], cnt[0][0][0], cnt[0][0][1]
 			cornerX, cornerY = cnt[0][0][0], cnt[0][0][1]
 
-			# cv2.circle(imgray,(cnt[0][0][0],cnt[0][0][1]),10,(0,255,0),2)
-			# cv2.circle(imgray,(centerX, centerY),10,(0,255,0),2)
-			
 		if m['m00'] >100 and m['m00'] <750:
 			x,y = int(m['m10']/m['m00']), int(m['m01']/m['m00'])
 			pieces.append((x,y))
-			# cv2.circle(imgray,(x,y),3,(0,255,0),2)
 
 	pieces = list(set(pieces))
 
