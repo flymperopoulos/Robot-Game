@@ -21,7 +21,7 @@ def send_tuple(tup,tup2):
     x2 = tup2[0]
     y2 = tup2[1]
     with serial.Serial('/dev/ttyACM0',9600) as ser:
-        time.sleep(2)
+        time.sleep(5)
         if ser.isOpen():
                 ser.write('X'+str(x)+'Y'+str(y)+'X'+ str(x2)+'Y'+str(y2))
                 print "Serial is Open"
