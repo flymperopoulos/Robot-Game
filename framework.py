@@ -233,7 +233,8 @@ def humanMove(game, brd, player):
         d = get_State(brd)
         print "checking board"
         if d != None:
-            d_list = printBoard(d)
+            if d != 0:
+                d_list = printBoard(d)
         time.sleep(2)
     return d, None
 
@@ -277,7 +278,7 @@ def get_State(board):
     out = picam_main(board)
     if out == None:
         print "bull"
-        return 0
+        return None
     dic1, dic2 = out
     d= createBoard(dic1, dic2)
     d2 = compareBoard(board,d)
@@ -368,7 +369,8 @@ def run(strn,curPlayer,playW, playB):
         while state_view != boardView:
             time.sleep(2)
             d2 = get_State(brd)
-            state_view = printBoard(d2)
+            if d2 != None:
+                state_view = printBoard(d2)
         if boardView!=previousBrdView:
             previousBrdView = boardView
             player = otherPlayer(player)
