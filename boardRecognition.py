@@ -22,7 +22,7 @@ import numpy as np
 
 # im = cv2.imread('res/boardStateTwo.jpg')
 # im = cv2.imread('res/boardStateOne.jpg') 
-im = cv2.imread('res/boardStateNew.jpg')
+im = cv2.imread('res/boardStateTest.jpg')
 # im = cv2.imread('res/red.jpg')
 # print im
 
@@ -106,7 +106,7 @@ for cnt in contours:
 		cv2.circle(imgray,(cornerX, cornerY),10,(0,255,0),2)
 		cv2.circle(imgray,(centerX, centerY),10,(0,255,0),2)
 		
-	if m['m00'] < 700 and m['m00'] > 500:
+	if m['m00'] < 850 and m['m00'] > 500:
 		x,y = int(m['m10']/m['m00']), int(m['m01']/m['m00'])
 		triangle.append((x,y))
 		pieces.append((x,y))

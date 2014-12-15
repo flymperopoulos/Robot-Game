@@ -279,8 +279,12 @@ def get_State(board):
     dic1, dic2 = out
     d= createBoard(dic1, dic2)
     d2 = compareBoard(board,d)
-    print "d2", d2
-    print "d", d
+    
+    for key, value in d2.iteritems():
+        if value != 0:
+            print "d2", key,value.color, value._position, value.name
+    for key, value in d.iteritems():
+        print "d in get", key,value.color, value._position, value.name
     return d2
 
 def createBoard(camBrd, colorBrd):
@@ -291,6 +295,10 @@ def createBoard(camBrd, colorBrd):
             d[keys] = CheckerPiece("W", keys, "0")
         else:
             d[keys] = CheckerPiece("B", keys, "0")
+    for key, value in d.iteritems():
+        print "d in create", key,value.color, value._position, value.name
+
+
     return d
 
 
