@@ -65,6 +65,25 @@ def getColorList(contours):
 
 	return color
 
+def getTriangleList(contours):
+	"""
+		returns the list of the coordinate points where the red pieces are
+	"""
+	i = 0
+	color = []   # center points of the colors
+	for cnt in contours:
+		m = cv2.moments(cnt)
+
+		if m['m00'] < 700 and m['m00'] > 500:
+			x,y = int(m['m10']/m['m00']), int(m['m01']/m['m00'])
+			i= i+1
+			color.append((x,y))
+
+	color = list(set(color))
+
+	return color
+
+
 def getBoardList(contours):
 	"""
 		returns the list of coordinate points where all of hte pieces are
@@ -90,7 +109,10 @@ def getBoardList(contours):
 			centerX, centerY = int(m['m10']/m['m00']), int(m['m01']/m['m00'])
 			cornerX, cornerY = cnt[0][0][0], cnt[0][0][1]
 
-		if m['m00'] >100 and m['m00'] <750:
+		if m['m00'] < 1300 and m['m00'] > 1000:		#adding black pieces 
+			x,y = int(m['m10']/m['m00']), int(m['m01']/m['m00'])
+			pieces.append((x,y))
+		if m['m00'] < 700 and m['m00'] > 500:		#adding triangle pieces
 			x,y = int(m['m10']/m['m00']), int(m['m01']/m['m00'])
 			pieces.append((x,y))
 
@@ -139,9 +161,9 @@ def picam_main():
 	img = getImage('/home/pi/Robot-Game/res/vidCheckers.png')
 	imgray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 	brdCountour = getContour(img)
-	clrCountour = getColor(img)
+	# clrCountour = getColor(img)
 	brdList, centerX, centerY, cornerX, cornerY = getBoardList(brdCountour)
-	clrList = getColorList(clrCountour)
+	clrList = getColorList(brdCountour)
 
 	brdDict = imageToBoard(brdList, centerX, centerY, cornerX, cornerY)
 	clrDict = imageToBoardColor(brdDict, clrList ,centerX, centerY, cornerX, cornerY)

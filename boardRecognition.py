@@ -22,8 +22,8 @@ import numpy as np
 
 # im = cv2.imread('res/boardStateTwo.jpg')
 # im = cv2.imread('res/boardStateOne.jpg') 
-im = cv2.imread('res/boardBlue.jpg')
-im = cv2.imread('res/red.jpg')
+im = cv2.imread('res/boardStateNew.jpg')
+# im = cv2.imread('res/red.jpg')
 # print im
 
 height, width = im.shape[:2]
@@ -49,27 +49,27 @@ output = cv2.bitwise_and(im, im, mask = mask)
 """
  contour of the red color
 """
-ret,thresh = cv2.threshold(mask,127,255,cv2.THRESH_BINARY | cv2.THRESH_OTSU)
-contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
-i = 0
-color = []   # center points of the colors
-for cnt in contours:
-	m = cv2.moments(cnt)
+# ret,thresh = cv2.threshold(mask,127,255,cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+# contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+# i = 0
+# color = []   # center points of the colors
+# for cnt in contours:
+# 	m = cv2.moments(cnt)
 
-	if m['m00'] > 20:
-		x,y = int(m['m10']/m['m00']), int(m['m01']/m['m00'])
-		i= i+1
-		color.append((x,y))
-		cv2.circle(mask,(x,y),3,(0,255,0),2)
-# print i
-color = list(set(color))
-print color
+# 	if m['m00'] > 20:
+# 		x,y = int(m['m10']/m['m00']), int(m['m01']/m['m00'])
+# 		i= i+1
+# 		color.append((x,y))
+# 		cv2.circle(mask,(x,y),3,(0,255,0),2)
+# # print i
+# color = list(set(color))
+
 
 def checkColorArea():
 	pass
 
 # cv2.imshow("im", im)
-cv2.imshow("red", mask)
+# cv2.imshow("red", mask)
 
 """
 	finding the contour
@@ -84,12 +84,13 @@ c = 0
 big = 0
 mom = 0
 pieces = []
+triangle = []
 print len(contours)
 for cnt in contours:
 	m = cv2.moments(cnt)
 
 	# print cnt, len(cnt)
-	# print m['m00']
+	print m['m00']
 	if m['m00'] > big:
 		big = m['m00']
 		c = cnt
@@ -100,15 +101,16 @@ for cnt in contours:
 	if m['m00'] >100000 and m['m00'] <220000:
 		centerX, centerY = int(m['m10']/m['m00']), int(m['m01']/m['m00'])
 		# print cnt[0], cnt[0][0][0], cnt[0][0][1]
-		cornerX, cornerY = cnt[0][0][0]+ 34, cnt[0][0][1]
+		cornerX, cornerY = cnt[0][0][0], cnt[0][0][1]
 
 		cv2.circle(imgray,(cornerX, cornerY),10,(0,255,0),2)
 		cv2.circle(imgray,(centerX, centerY),10,(0,255,0),2)
 		
-	if m['m00'] < 1300 and m['m00'] > 1000:
+	if m['m00'] < 700 and m['m00'] > 500:
 		x,y = int(m['m10']/m['m00']), int(m['m01']/m['m00'])
+		triangle.append((x,y))
 		pieces.append((x,y))
-		cv2.circle(imgray,(x,y),3,(0,255,0),5)
+		cv2.circle(imgray,(x,y),3,(0,255,0),2)
 
 	if m['m00'] < 1300 and m['m00'] > 1000:
 		x,y = int(m['m10']/m['m00']), int(m['m01']/m['m00'])
@@ -116,6 +118,7 @@ for cnt in contours:
 		cv2.circle(imgray,(x,y),3,(0,255,0),5)
 
 pieces = list(set(pieces))
+triangle = list(set(triangle))
 
 # print big, c, mom
 
@@ -126,31 +129,31 @@ cv2.imshow('img', img)
 
 
 
-# gridW = -(centerX - cornerX)*2/8
-# gridH = (centerY - cornerY)*2/8
-# print gridW, gridH
-# print centerX, centerY
-# print cornerX, cornerY
-# print pieces
+gridW = (centerX - cornerX)*2/8
+gridH = (centerY - cornerY)*2/8
+print gridW, gridH
+print centerX, centerY
+print cornerX, cornerY
+print pieces
 
-# d = {}
-# xtemp=0
-# ytemp =0 
-# for p in pieces:
-# 	xtemp = -(p[0]-cornerX)/gridW +1
-# 	ytemp = (p[1]-cornerY)/gridH +1
-# 	if xtemp < 9 and ytemp < 9  and xtemp >0  and ytemp > 0:
-# 		d[xtemp, ytemp] = 1
-# print d, len(d)
+d = {}
+xtemp=0
+ytemp =0 
+for p in pieces:
+	xtemp = (p[0]-cornerX)/gridW +1
+	ytemp = (p[1]-cornerY)/gridH +1
+	if xtemp < 9 and ytemp < 9  and xtemp >0  and ytemp > 0:
+		d[xtemp, ytemp] = 1
+print d, len(d)
 
-# dc = {}
-# xtemp=0
-# ytemp =0 
-# for p in color:
-# 	xtemp = -(p[0]-cornerX)/gridW +1
-# 	ytemp = (p[1]-cornerY)/gridH +1
-# 	if (xtemp, ytemp) in d:
-# 		dc[xtemp, ytemp] = "R"
-# print dc, len(dc)
+dc = {}
+xtemp=0
+ytemp =0 
+for p in triangle:
+	xtemp = (p[0]-cornerX)/gridW +1
+	ytemp = (p[1]-cornerY)/gridH +1
+	if (xtemp, ytemp) in d:
+		dc[xtemp, ytemp] = "R"
+print dc, len(dc)
 
 cv2.waitKey(0)
