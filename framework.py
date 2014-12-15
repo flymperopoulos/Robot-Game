@@ -52,21 +52,21 @@ def utility (board):
         for j in range(1,9):
             if board[(i,j)] != 0:
                 if board[(i,j)].color == 'white':
-                    score -= PIECE
-                    if board[(i,j)].isKing:
-                        score -= KING
-                        if i == 1 or i == 8:
-                            score -= EDGE 
-                    if j == 1 or j == 8:
-                        score -= EDGE
-                elif board[(i,j)].color == 'black':
                     score += PIECE
                     if board[(i,j)].isKing:
                         score += KING
-                        if i == 1 or i == 8: 
-                            score+= EDGE
+                        if i == 1 or i == 8:
+                            score += EDGE 
                     if j == 1 or j == 8:
                         score += EDGE
+                elif board[(i,j)].color == 'black':
+                    score -= PIECE
+                    if board[(i,j)].isKing:
+                        score -= KING
+                        if i == 1 or i == 8: 
+                            score-= EDGE
+                    if j == 1 or j == 8:
+                        score -= EDGE
     score += random.randint(0,10)
     return score
 
