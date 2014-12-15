@@ -279,7 +279,8 @@ def get_State(board):
     dic1, dic2 = out
     d= createBoard(dic1, dic2)
     d2 = compareBoard(board,d)
-    print d2
+    print "d2", d2
+    print "d", d
     return d2
 
 def createBoard(camBrd, colorBrd):
@@ -312,6 +313,7 @@ def compareBoard(brd, finalCamBoard):
                     d[camPieces._position] = CheckerPiece("W", camPieces._position, pieces.name[1])
             # adding the "B" (computer) pieces. In checkers only thing that can happen is pieces being taken away
                 if pieces.color == "B" and camPieces.color == "B" and pieces._position == camPieces._position:
+                    print "adding black pieces"
                     d[pieces._position] = CheckerPiece("B", pieces._position, pieces.name[1])
 
     return d

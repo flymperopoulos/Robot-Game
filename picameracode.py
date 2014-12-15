@@ -74,7 +74,7 @@ def getTriangleList(contours):
 	for cnt in contours:
 		m = cv2.moments(cnt)
 
-		if m['m00'] < 700 and m['m00'] > 500:
+		if m['m00'] < 850 and m['m00'] > 500:
 			x,y = int(m['m10']/m['m00']), int(m['m01']/m['m00'])
 			i= i+1
 			color.append((x,y))
@@ -107,7 +107,7 @@ def getBoardList(contours):
 		if m['m00'] < 1300 and m['m00'] > 1000:		#adding black pieces 
 			x,y = int(m['m10']/m['m00']), int(m['m01']/m['m00'])
 			pieces.append((x,y))
-		if m['m00'] < 700 and m['m00'] > 500:		#adding triangle pieces
+		if m['m00'] < 850 and m['m00'] > 500:		#adding triangle pieces
 			x,y = int(m['m10']/m['m00']), int(m['m01']/m['m00'])
 			pieces.append((x,y))
 
