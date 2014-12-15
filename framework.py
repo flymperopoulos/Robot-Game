@@ -122,27 +122,34 @@ def max_value(game,board,player,tree,depth):
 
 def best_move(game,board,player):
     """Calls the minimax algorithm to determine best move"""
-    new_game = Checkers()
-    board_buf = board
-    new_game.board = board_buf
-    print board_buf
-    tree = {}
-    m = {}
+    junk = []
     for piece in grab_pieces(board_buf,player):
         depth = 0
         moves,jumps = piece.validateMoves(board_buf)
         for move in moves:
-            if player.upper() == 'W':
-                value = min_value(new_game,board_buf,player,tree, depth)
-            else:
-                value = max_value(new_game,board_buf,player,tree, depth)
-            m[value] = [piece,move[0],move[1]]
-    if player.upper() == 'W':
-        key = max(m)
-        move = m[key]
-    else:
-        key = min(m)
-        move = m[key] 
+            junk.append(piece,move[0],move[1])
+    return random.choice(junk)
+    # new_game = Checkers()
+    # board_buf = board
+    # new_game.board = board_buf
+    # print board_buf
+    # tree = {}
+    # m = {}
+    # for piece in grab_pieces(board_buf,player):
+    #     depth = 0
+    #     moves,jumps = piece.validateMoves(board_buf)
+    #     for move in moves:
+    #         if player.upper() == 'W':
+    #             value = min_value(new_game,board_buf,player,tree, depth)
+    #         else:
+    #             value = max_value(new_game,board_buf,player,tree, depth)
+    #         m[value] = [piece,move[0],move[1]]
+    # if player.upper() == 'W':
+    #     key = max(m)
+    #     move = m[key]
+    # else:
+    #     key = min(m)
+    #     move = m[key] 
     print move
     return move
 
