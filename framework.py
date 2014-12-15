@@ -15,11 +15,14 @@ KING = 300
 EDGE = 10
 
 def send_tuple(tup,tup2):
+    """Sends the coordinate points that the arduino needs to move the steppers"""
     print "Sending Tuple"
     x = tup[0]
     y = tup[1]
     x2 = tup2[0]
     y2 = tup2[1]
+
+    # connecting to the serial port
     with serial.Serial('/dev/ttyACM0',9600) as ser:
         time.sleep(5)
         if ser.isOpen():

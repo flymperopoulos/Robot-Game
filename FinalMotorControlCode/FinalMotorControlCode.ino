@@ -50,13 +50,14 @@ void setup() {
 }
 
 void runXY(int xVal, int yVal, boolean xMovement, boolean yMovement){
-
+// boolean determines if the motor is running forward or backward
   if (xMovement){
     M1->step(4110*xVal, FORWARD, DOUBLE);
   } else {
     M1->step(*xVal, BACKWARD, DOUBLE);
   }
   
+  // release the motor
   M1->release();
   
   if (yMovement){
@@ -98,7 +99,7 @@ void zAxisRelease(){
       servo1.write(pos);              // tell servo to go to position in variable 'pos' 
       delay(50);                       // waits 15ms for the servo to reach the position 
     } 
-    
+      // run the dc motor pump backward to let the balloon return to the snug state
        M3->setSpeed(40);
        M3->run(BACKWARD);
        delay(200);
@@ -155,6 +156,7 @@ void loop(){
     Serial.println("go to origin");    
     
     goToOrigin();
+
     Serial.println("moving to 1, 1");
     runXY(1, 0, true, true);
     
@@ -194,8 +196,6 @@ void loop(){
     Serial.println("go to origin");    
     
     goToOrigin();
-
-  
   }
 
 

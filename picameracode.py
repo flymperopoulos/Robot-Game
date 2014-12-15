@@ -4,24 +4,18 @@ import picamera
 import time
 
 def getState():
-	"""
-		takes the picture from the PiCamera and saves it to the desktop
-	"""
+	"""takes the picture from the PiCamera and saves it to the desktop"""
 	camera = picamera.PiCamera()
 	time.sleep(1) 
 	camera.capture('/home/pi/Robot-Game/res/boardStateTest.jpg')
 	camera.close()
 
 def getImage(filename):
-	"""
-		returns the img
-	"""
+	"""returns the img"""
 	return cv2.imread(filename)
 
 def getContour(img):
-	"""
-		returns the contour of the board
-	"""
+	"""returns the contour of the board"""
 	# grayscaled image
 	imgray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 
@@ -31,9 +25,7 @@ def getContour(img):
 	return contours
 
 def getColor(img):
-	"""
-		returns the color contour of the board
-	"""
+	"""returns the color contour of the board"""
 
 	#color ranges for each color
 	lower_red = np.uint8([0, 155, 0])
@@ -52,9 +44,7 @@ def getColor(img):
 	return contours
 
 def getColorList(contours):
-	"""
-		returns the list of the coordinate points where the human's pieces are
-	"""
+	"""returns the list of the coordinate points where the human's pieces are"""
 	color = []   # center points of the colors
 	for cnt in contours:
 		m = cv2.moments(cnt)
@@ -68,9 +58,7 @@ def getColorList(contours):
 	return color
 
 def getTriangleList(contours):
-	"""
-		returns the list of the coordinate points where the red pieces are
-	"""
+	"""returns the list of the coordinate points where the red pieces are"""
 	i = 0
 	color = []   # center points of the colors
 	for cnt in contours:
@@ -87,9 +75,7 @@ def getTriangleList(contours):
 
 
 def getBoardList(contours):
-	"""
-		returns the list of coordinate points where all of hte pieces are
-	"""
+	"""returns the list of coordinate points where all of the pieces are and the center and corner points"""
 	centerX = 0
 	centerY = 0
 	cornerX = 0
@@ -102,41 +88,42 @@ def getBoardList(contours):
 	for cnt in contours:
 	
 		m = cv2.moments(cnt)
+		# finding the board and setting center and corner coordinates
 		if m['m00'] >100000 and m['m00'] <220000:
 			centerX, centerY = int(m['m10']/m['m00']), int(m['m01']/m['m00'])
 			cornerX, cornerY = cnt[0][0][0], cnt[0][0][1]
-
-		if m['m00'] < 1300 and m['m00'] > 1000:		#adding black pieces 
+		#adding black pieces 
+		if m['m00'] < 1300 and m['m00'] > 1000:
 			x,y = int(m['m10']/m['m00']), int(m['m01']/m['m00'])
 			pieces.append((x,y))
-		if m['m00'] < 850 and m['m00'] > 500:		#adding triangle pieces
+		#adding triangle pieces
+		if m['m00'] < 850 and m['m00'] > 500:		
 			x,y = int(m['m10']/m['m00']), int(m['m01']/m['m00'])
 			pieces.append((x,y))
 
 	pieces = list(set(pieces))
 
-	
-
 	return pieces, centerX, centerY, cornerX, cornerY
 
-
 def imageToBoard(brdList, centerX, centerY, cornerX, cornerY):
+	"""returns dictionary of the board state"""
 	brdDict = {}
 	xtemp=0
 	ytemp =0 
+	# finding out the height and width of each square
 	gridW = (centerX - cornerX)*2/8
 	gridH = (centerY - cornerY)*2/8
 	for p in brdList:
-		# if p[0] >gridW*8 and p[1] >gridH*8:
 		xtemp = (p[0]-cornerX)/gridW +1
 		ytemp = (p[1]-cornerY)/gridH +1
 		if xtemp < 9 and ytemp < 9  and xtemp >0  and ytemp > 0:
+			# checking if each pieces are within the board
 			brdDict[xtemp, ytemp] = 1
+
 	return brdDict
 	
-
 def imageToBoardColor(brdDict, clrList, centerX, centerY, cornerX, cornerY):
-
+	"""returns the list of coordinate points where red pieces are"""
 	clrDict = {}
 	xtemp = 0
 	ytemp = 0
@@ -146,6 +133,7 @@ def imageToBoardColor(brdDict, clrList, centerX, centerY, cornerX, cornerY):
 		xtemp = (p[0]-cornerX)/gridW +1
 		ytemp = (p[1]-cornerY)/gridH +1
 		if (xtemp, ytemp) in brdDict:
+			# finding out the red pieces
 			clrDict[xtemp, ytemp] = "R"
 	return clrDict
 
@@ -159,18 +147,15 @@ def grab_pieces(board,player):
     return pieces
 
 def picam_main(brd):
-	"""
-		Main method that runs everything
-	"""
+	"""Main method that runs everything"""
 	try:
 		getState()
-		#img = getImage('/home/pi/Robot-Game/res/boardState.jpg')
 		img = getImage('/home/pi/Robot-Game/res/boardStateTest.jpg')
 		brdCountour = getContour(img)
-		# clrCountour = getColor(img)
+		# generating the lists from the picture
 		brdList, centerX, centerY, cornerX, cornerY = getBoardList(brdCountour)
 		clrList = getTriangleList(brdCountour)
-
+		# generating the dictionary from the lists
 		brdDict = imageToBoard(brdList, centerX, centerY, cornerX, cornerY)
 		clrDict = imageToBoardColor(brdDict, clrList ,centerX, centerY, cornerX, cornerY)
 
@@ -180,6 +165,8 @@ def picam_main(brd):
 		print clrDict, len(clrDict)
 		w_pieces = grab_pieces(brd,'W')
 		b_pieces = grab_pieces(brd,'B')
+
+		# returning None if the board is not ready
 		if len(clrDict) == len(w_pieces):
 			pn = len(w_pieces) + len(b_pieces)
 			if  pn == len(brdDict):
