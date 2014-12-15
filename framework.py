@@ -308,8 +308,6 @@ def compareBoard(brd, finalCamBoard):
     for i in range(1,9):
         for j in range(1,9):
              d[(i,j)] = 0
-    w_nums = range(0,12)
-    b_nums = range(0,12)
     for camPieces in finalCamBoard.values():
             # adding the "W" (human) pieces. There are only going to be one piece that changed position
             # print pieces.color, pieces.position, pieces.name
@@ -327,10 +325,6 @@ def compareBoard(brd, finalCamBoard):
             if brd[camPieces._position] != 0:
                 d[camPieces._position] = CheckerPiece(brd[camPieces._position].color,
                                             camPieces._position, brd[camPieces._position].number)
-                if brd[camPieces._position].color == 'W':
-                    w_nums.remove(brd[camPieces._position].number)
-                else:
-                    b_nums.remove(brd[camPieces._position].number)
             else:
                 d[camPieces._position] = CheckerPiece(camPieces.color,
                                             camPieces._position, str(random.randint(12,99)))
