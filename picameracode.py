@@ -9,23 +9,23 @@ def getState():
 	"""
 	camera = picamera.PiCamera()
 	time.sleep(4)
-	camera.capture('/home/pi/Robot-Game/res/boardStateOne.jpg')
+	camera.capture('/home/pi/Robot-Game/res/boardStateNew.jpg')
 	camera.close()
 
 def getImage(filename):
 	"""
 		returns the img
 	"""
-	return cv2.imread(filename)
+	return cv2.imread(filename, 0)
 
 def getContour(img):
 	"""
 		returns the contour of the board
 	"""
 
-	imgray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-	edges = cv2.Canny(imgray,100,200)
-	ret,thresh = cv2.threshold(imgray,127,255,cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+	#imgray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+	edges = cv2.Canny(img,100,200)
+	ret,thresh = cv2.threshold(img,127,255,cv2.THRESH_BINARY | cv2.THRESH_OTSU)
 	contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
 	return contours
 
@@ -56,7 +56,7 @@ def getColorList(contours):
 	for cnt in contours:
 		m = cv2.moments(cnt)
 
-		if m['m00'] > 20:
+		if m['m00'] > 700 and m['m00'] >500:
 			x,y = int(m['m10']/m['m00']), int(m['m01']/m['m00'])
 			i= i+1
 			color.append((x,y))
@@ -158,8 +158,7 @@ def picam_main():
 	"""
 	getState()
 	#img = getImage('/home/pi/Robot-Game/res/boardState.jpg')
-	img = getImage('/home/pi/Robot-Game/res/vidCheckers.png')
-	imgray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+	img = getImage('/home/pi/Robot-Game/res/boardStateNew.png')
 	brdCountour = getContour(img)
 	# clrCountour = getColor(img)
 	brdList, centerX, centerY, cornerX, cornerY = getBoardList(brdCountour)
@@ -178,5 +177,5 @@ def pic():
 	getState()
 	
 if __name__ in "__main__":
-	#main()
-	pic()
+	picam_main()
+	#pic()
