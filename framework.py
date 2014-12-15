@@ -271,7 +271,10 @@ def makeMove(game, brd, move):
 
 def get_State(board):
     """detects how the board looks"""
-    dic1, dic2 = picam_main()
+    out = picam_main(board)
+    if out == None:
+        print "bull"
+        return None
     d= createBoard(dic1, dic2)
     d2 = compareBoard(board,d)
     return d2
@@ -370,7 +373,7 @@ def main():
     #   playB = computerMove
     inpt = sys.argv
     usrInput = inpt[1:]
-    if inpt != '':
+    if usrInput != []:
         if usrInput[0].upper() == 'TEST':
             if len(usrInput) == 2:
                 if usrInput[1].upper() == 'B':

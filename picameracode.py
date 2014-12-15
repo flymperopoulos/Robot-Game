@@ -179,8 +179,8 @@ def picam_main(brd):
 	b_pieces = grab_pieces(brd,'B')
 	if len(clrDict) == len(w_pieces):
 		pn = len(w_pieces) + len(b_pieces)
-		if  pn == len(brdDict)
-		return brdDict, clrDict
+		if  pn == len(brdDict):
+			return brdDict, clrDict
 	else:
 		return None
 
