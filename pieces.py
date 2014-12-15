@@ -71,7 +71,7 @@ class CheckerPiece(object):
                 if (nx,ny) in jumps:
                     pass
                 elif brd[(nx,ny)] != 0:
-                    if brd[(nx,ny)] != self.color:
+                    if brd[(nx,ny).color] != self.color:
                         if nx+self.DIR[key][0]>0 and ny+self.DIR[key][1]>0 and nx+self.DIR[key][0]<9 and ny+self.DIR[key][1]<9:
                             if brd[nx+self.DIR[key][0],ny+self.DIR[key][1]] == 0: 
                                 moves.append((nx+self.DIR[key][0],ny+ self.DIR[key][1]))
