@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-import picamera
+# import picamera
 import time
 
 def getState():
@@ -8,7 +8,7 @@ def getState():
 		takes the picture from the PiCamera and saves it to the desktop
 	"""
 	camera = picamera.PiCamera()
-	time.sleep(1)
+	time.sleep(1) 
 	camera.capture('/home/pi/Robot-Game/res/boardStateTest.jpg')
 	camera.close()
 
@@ -22,9 +22,10 @@ def getContour(img):
 	"""
 		returns the contour of the board
 	"""
-
+	# grayscaled image
 	imgray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-	edges = cv2.Canny(imgray,100,200)
+
+	# finding the contour list
 	ret,thresh = cv2.threshold(imgray,127,255,cv2.THRESH_BINARY | cv2.THRESH_OTSU)
 	contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
 	return contours
@@ -33,6 +34,8 @@ def getColor(img):
 	"""
 		returns the color contour of the board
 	"""
+
+	#color ranges for each color
 	lower_red = np.uint8([0, 155, 0])
 	upper_red = np.uint8([10, 255, 255])
 	lower_blue = np.uint8([100,150,0])
@@ -40,6 +43,7 @@ def getColor(img):
 	lower_green = np.uint8([40, 110, 110])
 	upper_green = np.uint8([70, 255, 255])
 
+	# finding the contour for the list
 	hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 	mask = cv2.inRange(hsv, lower_red, upper_red)
 	ret,thresh = cv2.threshold(mask, 127, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
@@ -49,16 +53,14 @@ def getColor(img):
 
 def getColorList(contours):
 	"""
-		returns the list of the coordinate points where the red pieces are
+		returns the list of the coordinate points where the human's pieces are
 	"""
-	i = 0
 	color = []   # center points of the colors
 	for cnt in contours:
 		m = cv2.moments(cnt)
 
 		if m['m00'] > 700 and m['m00'] >500:
 			x,y = int(m['m10']/m['m00']), int(m['m01']/m['m00'])
-			i= i+1
 			color.append((x,y))
 
 	color = list(set(color))

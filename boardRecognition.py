@@ -123,6 +123,7 @@ triangle = list(set(triangle))
 # print big, c, mom
 
 img = im
+cv2.imshow('im', im)
 cv2.drawContours(img, contours, -1, (0,0,0), 2)
 cv2.imshow('stuff', imgray)
 cv2.imshow('img', img)
