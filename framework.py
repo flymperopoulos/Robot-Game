@@ -304,15 +304,15 @@ def compareBoard(brd, finalCamBoard):
             # adding the "W" (human) pieces. There are only going to be one piece that changed position
             # print pieces.color, pieces.position, pieces.name
             if pieces != 0:
-                if pieces.color == "W" and camPieces.color == "W" and pieces.position == camPieces.position:
+                if pieces.color == "W" and camPieces.color == "W" and pieces._position == camPieces._position:
                 # print "first if", pieces.color, pieces.position, pieces.name
-                    d[pieces.position] = CheckerPiece("W", pieces.position, pieces.name[1])
+                    d[pieces._position] = CheckerPiece("W", pieces._position, pieces.name[1])
                 elif pieces.color == "W" and camPieces.color == "W":
                 # print "else", pieces.color, pieces.position, pieces.name
-                    d[camPieces.position] = CheckerPiece("W", camPieces.position, pieces.name[1])
+                    d[camPieces._position] = CheckerPiece("W", camPieces._position, pieces.name[1])
             # adding the "B" (computer) pieces. In checkers only thing that can happen is pieces being taken away
-                if pieces.color == "B" and camPieces.color == "B" and pieces.position == camPieces.position:
-                    d[pieces.position] = CheckerPiece("B", pieces.position, pieces.name[1])
+                if pieces.color == "B" and camPieces.color == "B" and pieces._position == camPieces._position:
+                    d[pieces._position] = CheckerPiece("B", pieces._position, pieces.name[1])
 
     return d
 
