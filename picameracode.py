@@ -193,5 +193,5 @@ def pic():
 	getState()
 	
 if __name__ in "__main__":
-	picam_main()
-	#pic()
+	#picam_main()
+	pic()
