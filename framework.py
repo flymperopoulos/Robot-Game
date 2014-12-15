@@ -123,9 +123,9 @@ def max_value(game,board,player,tree,depth):
 def best_move(game,board,player):
     """Calls the minimax algorithm to determine best move"""
     junk = []
-    for piece in grab_pieces(board_buf,player):
+    for piece in grab_pieces(board,player):
         depth = 0
-        moves,jumps = piece.validateMoves(board_buf)
+        moves,jumps = piece.validateMoves(board)
         for move in moves:
             junk.append(piece,move[0],move[1])
     return random.choice(junk)
