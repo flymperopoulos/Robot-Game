@@ -127,7 +127,7 @@ def best_move(game,board,player):
         depth = 0
         moves,jumps = piece.validateMoves(board)
         for move in moves:
-            junk.append(piece,move[0],move[1])
+            junk.append([piece,move[0],move[1]])
     return random.choice(junk)
     # new_game = Checkers()
     # board_buf = board
