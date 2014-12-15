@@ -156,7 +156,7 @@ void loop(){
     
     goToOrigin();
     Serial.println("moving to 1, 1");
-    runXY(1, .1, true, true);
+    runXY(1, 0, true, true);
     
     Serial.println("moving");
     
